@@ -1,0 +1,20 @@
+API_KEY = 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
+translate into other languages as well options - along with link ask for the language of the notes as well, by default - english else translate 
+We can change the language using a dropdown present on the right side of the summary box as in zksync-bridge
+use the summary to generate two images related to the video and add them inside the pdf as well - One image on each pdf 
+mention the api being used in the website->resources section 
+GET SUMMARIZED NOTES OF ANY LANGUAGE JUST BY PROVIDING THE YT VIDEO LINK IN ANY LANGUAGE - DOWNLOADABLE
+youtube-transcript, facebook/bart-large-cnn, pdfkit
+
+Frontend - similar to stripe or https://www.lemonsqueezy.com/
+Make the UI/frontend similar to zksync-bridge thing - simple 
+
+- Add your own logo in the meta data of the html file 
+
+TODO
+- generate pics and make the frontend for all this , 1 pic for each page of the pdf
+- Translation 
+- setting up stripe payments , Paypal too maybe?
+
+Generate notes of youtube video just with a link in any language and pdf can be downloaded as well (with multiple themes + pictures)
+Add the option for listening to the generated text using voice as well 
