@@ -18,3 +18,11 @@ TODO
 
 Generate notes of youtube video just with a link in any language and pdf can be downloaded as well (with multiple themes + pictures)
 Add the option for listening to the generated text using voice as well 
+TODO
+1) ADDING LANGUAGES, download done, questions related to the thing using the content aka summary for the same as well
+2) ADDING AUDIO
+3) SUMMARIZING ANY DOC OR SOMETHING THROUGH PDF 
+4) GENERATING NOTES OF ANY BOOK 
+
+PRICING 
+ON THE BASIS OF USAGE FOR THE SAME AS PEOPLE WOULD BE UPLOADING LOADS OF DATA TO SUMMARIZE SO DIFFERENTIATE TIERS ON THE BASIS OF THAT ONLY

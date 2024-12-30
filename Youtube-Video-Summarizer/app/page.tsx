@@ -1,6 +1,6 @@
-import Demo from "./components/HomePageComponents/Demo";
+import Demo from "./components/HomePageComponents/Upload";
 import Help from "./components/HomePageComponents/Help";
-import Hero from "./components/HomePageComponents/Hero";
+import Hero from "./components/HomePageComponents/Summarize";
 import Pricing from "./components/HomePageComponents/Pricing";
 import Parent from "./components/Parent";
 
