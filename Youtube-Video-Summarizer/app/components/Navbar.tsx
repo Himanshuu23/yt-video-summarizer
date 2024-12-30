@@ -14,7 +14,7 @@ function scrollToSection(ref: React.RefObject<HTMLDivElement>) {
 
 export default function Navbar({ demoRef, heroRef, pricingRef }: NavbarProps) {
     return (
-        <nav className="flex justify-between items-center px-6 py-3 bg-black fixed top-0 left-0 w-full z-10">
+        <nav className="flex justify-between items-center overflow-x-hidden px-6 py-3 bg-black fixed top-0 left-0 w-full z-10">
             <div className="flex items-center">
                 <div className="w-10 h-10">Logo</div>
             </div>

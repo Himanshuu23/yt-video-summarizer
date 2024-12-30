@@ -13,12 +13,12 @@ export default function Parent() {
     const pricingRef = useRef<HTMLDivElement>(null)
     
     return (
-        <>
+        <div className="h-400vh w-screen overflow-x-hidden">
             <Navbar demoRef={demoRef} heroRef={heroRef} pricingRef={pricingRef} />
             <Hero />
             <Summarize />
             <Upload ref={demoRef} />
             <Pricing ref={pricingRef} />
-        </>
+        </div>
     )
 }

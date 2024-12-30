@@ -5,7 +5,7 @@ export default function UploadComponent({ref}) {
   const [isSummaryVisible, setIsSummaryVisible] = useState(false);
 
   return (
-    <div ref={ref} className="h-screen w-screen bg-black">
+    <div ref={ref} className="h-screen w-screen bg-black overflow-x-hidden">
       {!isSummaryVisible ? (
         <div className="h-full w-full flex flex-col">
           <div className="flex justify-center items-center py-4">
