@@ -1,17 +1,15 @@
-import Image from 'next/image';
-
 export default function Hero() {
     return (
         <section className="relative h-screen overflow-x-hidden flex items-center justify-center text-center text-white">
             <div className="absolute inset-0">
-            <Image
-                    src="/hero.jpg"
-                    alt="Background Image"
-                    layout="fill"
-                    objectFit="cover"
-                    quality={100}
-                />
-                <div className="absolute inset-0 backdrop-blur-md bg-black/50"></div>
+                <video
+                    src="/giphy.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    className="absolute inset-0 w-full h-full object-cover"
+                ></video>
+                <div className="absolute inset-0 backdrop-blur-md bg-black/30"></div>
             </div>
 
             <div className="relative z-10 max-w-4xl px-4">
