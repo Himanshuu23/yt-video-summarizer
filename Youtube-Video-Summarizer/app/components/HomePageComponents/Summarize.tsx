@@ -1,3 +1,4 @@
+import React from "react";
 import { forwardRef, useEffect, useState } from "react";
 import Image from "next/image";
 import { Poppins } from "next/font/google"
@@ -20,7 +21,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
 
   async function handleSubmit(e: any) {
     e.preventDefault();
-    const response = await fetch('http://localhost:8000/summarize', {
+    const response = await fetch('http://localhost:8000/summarize-url', {
       method: 'POST',
       body: JSON.stringify({
         videoUrl: JSON.stringify(url),
