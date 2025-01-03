@@ -36,7 +36,7 @@ export default function Summary({
         onClick={closeModal}
       >
         <div
-          className="relative bg-black bg-opacity-90 text-white p-8 rounded-xl w-[80vw] max-h-[80vh] overflow-y-auto"
+          className="relative bg-black bg-opacity-90 text-white p-8 rounded-xl w-[90vw] md:w-[80vw] max-h-[80vh] overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
         >
           <button

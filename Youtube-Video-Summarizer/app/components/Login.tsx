@@ -1,5 +1,6 @@
 'use client'
 
+import React from "react";
 import { signIn, signOut, useSession } from "next-auth/react"
 import { useState } from "react";
 import ReactDOM from "react-dom";
@@ -36,7 +37,7 @@ export default function Login() {
      onClick={closeModal}
    >
      <div
-       className="relative bg-black p-8 rounded-xl w-96"
+       className="relative bg-black p-8 rounded-xl w-[80vw] sm:w-[400px]"
        onClick={(e) => e.stopPropagation()}
      >
        <button
@@ -46,7 +47,7 @@ export default function Login() {
          &times;
        </button>
        <div className="text-white text-center mb-4">Login using</div>
-       <div className="flex justify-center">
+       <div className="flex justify-center space-x-4">
          <button onClick={() => handleLogin("google")} className="flex items-center justify-center w-12 h-12">
            <div className="transform scale-125">
              <GoogleLogo />

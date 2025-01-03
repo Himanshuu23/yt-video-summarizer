@@ -87,8 +87,8 @@ export default function UploadComponent() {
   };
 
   return (
-    <div className={`h-full w-full bg-black overflow-hidden flex mb-24`}>
-      <div className="w-2/5 mt-8 ml-8 mr-24 flex items-center justify-center relative">
+    <div className={`h-full w-full bg-black overflow-hidden flex mb-24 flex-col md:flex-row`}>
+      <div className="w-full md:w-2/5 mt-8 ml-8 mr-24 flex items-center justify-center relative">
         {!isSummaryVisible && (
           <Image
             fill
@@ -98,7 +98,7 @@ export default function UploadComponent() {
           />
         )}
       </div>
-      <div className="flex flex-col justify-center pl-8 py-8 w-1/2">
+      <div className="flex flex-col justify-center pl-8 py-8 w-full md:w-1/2">
         <h1
           className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}
         >
@@ -113,16 +113,16 @@ export default function UploadComponent() {
           key points, available in multiple formats, and complemented with
           related questions to enhance understanding and retention.
         </p>
-        <div className="flex w-full mt-10 py-4">
+        <div className="flex flex-col md:flex-row w-full mt-10 py-4 space-y-4 md:space-y-0 md:space-x-4">
           <input
             type="file"
             accept=".pdf,.docx,.txt"
             onChange={handleUpload}
-            className="px-4 py-2 rounded bg-white font-bold text-black"
+            className="px-6 py-3 rounded-lg bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full md:w-[calc(100%-120px)]"
           />
           <button
             type="button"
-            className="ml-4 bg-red-700 font-bold text-white px-4 py-2 rounded"
+            className="mt-4 md:mt-0 w-full md:w-auto ml-0 md:ml-4 bg-red-700 font-bold text-white px-6 py-3 rounded-lg hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500"
             onClick={handleSummarize}
           >
             Summarize
@@ -138,5 +138,5 @@ export default function UploadComponent() {
         handleDownload={handleDownload}
       />
     </div>
-  );
+  );   
 }

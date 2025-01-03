@@ -70,8 +70,8 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   }, [pdfTheme, response]);
 
   return (
-    <div className="h-screen w-screen bg-black overflow-x-hidden flex my-16">
-      <div className="flex flex-col justify-center p-8 w-1/2">
+    <div className="h-screen w-screen bg-black overflow-x-hidden flex my-16 flex-col md:flex-row">
+      <div className="flex flex-col justify-center p-8 w-full md:w-1/2">
         <h1
           className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}
         >
@@ -90,17 +90,17 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
           id="url"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="w-1/2 mt-16 bg-transparent placeholder:text-white text-white text-lg border border-slate-200 rounded-md px-4 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow-md"
+          className="w-full md:w-1/2 mt-16 bg-transparent placeholder:text-white text-white text-lg border border-slate-200 rounded-md px-4 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow-md"
         />
         <button
           type="button"
           onClick={handleSubmit}
-          className="mt-6 w-1/5 font-bold bg-white text-black px-4 py-2 rounded"
+          className="mt-6 w-full md:w-1/5 font-bold bg-white text-black px-4 py-2 rounded"
         >
           Summarize
         </button>
       </div>
-      <div className="w-2/5 h-full flex items-center justify-center relative ml-14">
+      <div className="w-full md:w-2/5 h-full flex items-center justify-center relative mt-8 md:mt-0 md:ml-14">
         <Image
           fill
           src="/hero.jpg"
@@ -117,7 +117,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
         handleDownload={handleDownload}
       />
     </div>
-  );
+  );  
 });
 
 export default Summarize;

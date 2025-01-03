@@ -24,13 +24,13 @@ export default function Modal() {
           onClick={closeModal}
         >
           <div
-            className="relative bg-black bg-opacity-75 p-8 rounded-xl w-96"
+            className="relative bg-black bg-opacity-75 p-8 rounded-xl w-[90vw] sm:w-96"
             onClick={(e) => e.stopPropagation()}
           >
             <button onClick={closeModal} className="absolute p-2 top-1 right-2 text-white text-2xl">
               &times;
             </button>
-            <p>Due to unforeseen circumstances, the payment gateway is temporarily unavailable. We're working to resolve this as soon as possible. Thank you for your understanding! 🙏</p>
+            <p className="text-white text-center">Due to unforeseen circumstances, the payment gateway is temporarily unavailable. We're working to resolve this as soon as possible. Thank you for your understanding! 🙏</p>
           </div>
         </div>
       )}
