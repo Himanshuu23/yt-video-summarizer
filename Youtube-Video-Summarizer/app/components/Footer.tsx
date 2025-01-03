@@ -1,8 +1,14 @@
 import Link from 'next/link';
+import { Poppins } from "next/font/google";
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '700']
+});
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-gray-400 py-8">
+    <footer className={`${poppins.className} bg-black text-gray-400 py-8 mt-24`}>
       <div className="text-center space-y-6">
         <p className="text-sm">
           Need help? Email{' '}
@@ -53,7 +59,7 @@ export default function Footer() {
             </Link>
           </div>
         </div>
-        <p className="text-xs text-gray-400">Copyright &copy; 2024 Fireship LLC</p>
+        <p className="text-xs text-gray-400">Copyright &copy; 2024 summary LLC</p>
       </div>
     </footer>
   );
