@@ -95,7 +95,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
         <button
           type="button"
           onClick={handleSubmit}
-          className="mt-6 w-full md:w-1/5 font-bold bg-white text-black px-4 py-2 rounded"
+          className="mt-6 w-full md:w-1/5 mr-4 font-bold bg-white text-black px-2 py-2 rounded"
         >
           Summarize
         </button>
