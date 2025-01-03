@@ -1,7 +1,12 @@
 const express = require('express')
 const  PDFDocument = require('pdfkit')
+const multer = require('multer');
+const { extractTextFromDocument } = require('../utils/documentProcessor');
+const { summarizeTextInChunks, cleanSummary } = require('../utils/summarization');
 
 const router = express.Router();
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage });
 
 router.post('/generate-pdf', (req, res) => {
     const { summary, theme } = req.body;
