@@ -1,69 +1,46 @@
-import React from "react";
-import { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
+import Summary from "../Summary";
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '700']
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
   const [response, setResponse] = useState<string | null>(null);
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
-  const [pdfTheme, setPdfTheme] = useState('default');
+  const [pdfTheme, setPdfTheme] = useState("default");
   const [cachedPdfs, setCachedPdfs] = useState({
     default: null,
     dark: null,
   });
-  const [isSummaryVisible, setIsSummaryVisible] = useState(false);
-  const [isPdfVisible, setIsPdfVisible] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   async function handleSubmit(e: any) {
     e.preventDefault();
-    const response = await fetch('http://localhost:8000/summarize-url', {
-      method: 'POST',
-      body: JSON.stringify({
-        videoUrl: JSON.stringify(url),
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setResponse(data.summary);
-        setIsSummaryVisible(true);
-      })
-      .catch((error) => console.log(error));
+    const response = await fetch("http://localhost:8000/summarize-url", {
+      method: "POST",
+      body: JSON.stringify({ videoUrl: JSON.stringify(url) }),
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+    });
+    const data = await response.json();
+    setResponse(data.summary);
+    setIsModalOpen(true);
   }
 
   async function generatePdf(response: string) {
-    try {
-      const res = await fetch('http://localhost:8000/generate-pdf', {
-        method: 'POST',
-        body: JSON.stringify({
-          summary: response,
-          theme: pdfTheme,
-        }),
-        headers: {
-          'Content-type': 'application/json',
-        },
-      });
-
-      const blob = await res.blob();
-      const url: any = window.URL.createObjectURL(blob);
-
-      setCachedPdfs((prev) => ({
-        ...prev,
-        [pdfTheme]: url,
-      }));
-
-      setPreviewPdfUrl(url);
-    } catch (error) {
-      console.error('Error downloading PDF:', error);
-    }
+    const res = await fetch("http://localhost:8000/generate-pdf", {
+      method: "POST",
+      body: JSON.stringify({ summary: response, theme: pdfTheme }),
+      headers: { "Content-type": "application/json" },
+    });
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
+    setPreviewPdfUrl(url);
   }
 
   const handleThemeChange = (theme: string) => {
@@ -75,27 +52,29 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     }
   };
 
-  function handleDownload() {
+  const handleDownload = () => {
     if (previewPdfUrl) {
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = previewPdfUrl;
-      a.download = 'Summary.pdf';
+      a.download = "Summary.pdf";
       document.body.appendChild(a);
       a.click();
       a.remove();
     }
-  }
+  };
 
   useEffect(() => {
-    if (response && !cachedPdfs[pdfTheme] && isPdfVisible) {
+    if (response && !cachedPdfs[pdfTheme]) {
       generatePdf(response);
     }
-  }, [pdfTheme, response, isPdfVisible]);
+  }, [pdfTheme, response]);
 
   return (
     <div className="h-screen w-screen bg-black overflow-x-hidden flex my-16">
       <div className="flex flex-col justify-center p-8 w-1/2">
-        <h1 className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}>
+        <h1
+          className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}
+        >
           YouTube Video Summaries
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4b0082] via-[#ff00ff] to-[#1e90ff] animate-gradient mt-2">
@@ -122,69 +101,21 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
         </button>
       </div>
       <div className="w-2/5 h-full flex items-center justify-center relative ml-14">
-        {!isSummaryVisible ? (
-          <Image
-            fill
-            src="/hero.jpg"
-            alt="Background"
-            className="object-contain max-h-full max-w-full"
-          />
-        ) : (
-          <div className="summary-section px-4 py-6 bg-black text-white h-full w-full flex flex-col justify-center items-center">
-            <div className="summary-content text-center">
-              {response ||
-                "The German Johannes Gutenberg introduced printing in Europe. His invention had a decisive contribution in spread of mass-learning and in building the basis of the modern society. Gutenberg's major invention was a practical system permitting the mass production of printed books."}
-              {!isPdfVisible ? (
-                <button
-                  onClick={() => setIsPdfVisible(true)}
-                  className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
-                >
-                  Generate Pdf
-                </button>
-              ) : (
-                <button
-                  onClick={() => setIsPdfVisible(false)}
-                  className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Hide Pdf
-                </button>
-              )}
-            </div>
-            {isPdfVisible && (
-              <>
-                <div className="theme-options mt-4">
-                  <button
-                    onClick={() => handleThemeChange("default")}
-                    className="mr-2 px-4 py-2 bg-gray-300 text-black rounded"
-                  >
-                    Light Theme
-                  </button>
-                  <button
-                    onClick={() => handleThemeChange("dark")}
-                    className="px-4 py-2 bg-gray-800 text-white rounded"
-                  >
-                    Dark Theme
-                  </button>
-                </div>
-                <div className="pdf-preview mt-6">
-                  <h3 className="mb-4">PDF Preview</h3>
-                  <iframe
-                    src={previewPdfUrl || ''}
-                    style={{ width: "100%", height: "500px", border: "none" }}
-                    title="PDF Preview"
-                  />
-                  <button
-                    onClick={handleDownload}
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                  >
-                    Download
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        )}
+        <Image
+          fill
+          src="/hero.jpg"
+          alt="Background"
+          className="object-contain max-h-full max-w-full"
+        />
       </div>
+      <Summary
+        isOpen={isModalOpen}
+        closeModal={() => setIsModalOpen(false)}
+        summary={response}
+        pdfUrl={previewPdfUrl}
+        handleThemeChange={handleThemeChange}
+        handleDownload={handleDownload}
+      />
     </div>
   );
 });

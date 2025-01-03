@@ -1,6 +1,6 @@
 'use client'
 
-import Navbar from "./Navbar";
+import React from "react";
 import Upload from "./HomePageComponents/Upload";
 import Summarize from "./HomePageComponents/Summarize";
 import Hero from "./HomePageComponents/Hero";

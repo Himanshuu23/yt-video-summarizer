@@ -1,3 +1,4 @@
+import React from 'react';
 import { CheckIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link';
 import Modal from '../components/Modal';
@@ -29,7 +30,7 @@ const tiers = [
       'Support for multiple languages',
       'Increased text length limit',
       'Advanced narration options',
-      'Customizable PDF downloads (light and dark themes)',
+      'Customizable PDF downloads (multiple themes)',
     ],
     featured: true,
   },

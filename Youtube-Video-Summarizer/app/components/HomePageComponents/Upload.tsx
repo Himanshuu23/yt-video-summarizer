@@ -1,11 +1,13 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
-import { useState } from "react";
 import { Poppins } from "next/font/google";
+import Summary from "../Summary";
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  weight: ['400', '700']
+  subsets: ["latin"],
+  weight: ["400", "700"],
 });
 
 export default function UploadComponent() {
@@ -13,12 +15,11 @@ export default function UploadComponent() {
   const [file, setFile] = useState<File | null>(null);
   const [response, setResponse] = useState<string | null>(null);
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
-  const [pdfTheme, setPdfTheme] = useState('default');
+  const [pdfTheme, setPdfTheme] = useState("default");
   const [cachedPdfs, setCachedPdfs] = useState({
     default: null,
     dark: null,
   });
-  const [isPdfVisible, setIsPdfVisible] = useState(false);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const uploadedFile = e.target.files?.[0];
@@ -31,41 +32,37 @@ export default function UploadComponent() {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
-      const response = await fetch('http://localhost:8000/summarize-file', {
-        method: 'POST',
-        body: formData,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          setResponse(data.summary);
-          setIsSummaryVisible(true);
-        })
-        .catch((error) => console.log(error));
+      try {
+        const res = await fetch("http://localhost:8000/summarize-file", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        setResponse(data.summary);
+        setIsSummaryVisible(true);
+        generatePdf(data.summary);
+      } catch (error) {
+        console.error("Error summarizing file:", error);
+      }
     }
   }
 
-  async function generatePdf(response: string) {
+  async function generatePdf(summary: string) {
     try {
-      const res = await fetch('http://localhost:8000/generate-pdf', {
-        method: 'POST',
-        body: JSON.stringify({
-          summary: response,
-          theme: pdfTheme,
-        }),
-        headers: {
-          'Content-type': 'application/json',
-        },
+      const res = await fetch("http://localhost:8000/generate-pdf", {
+        method: "POST",
+        body: JSON.stringify({ summary, theme: pdfTheme }),
+        headers: { "Content-Type": "application/json" },
       });
       const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
+      const url = URL.createObjectURL(blob);
       setCachedPdfs((prev) => ({
         ...prev,
         [pdfTheme]: url,
       }));
       setPreviewPdfUrl(url);
-      setIsPdfVisible(true);
     } catch (error) {
-      console.error('Error downloading PDF:', error);
+      console.error("Error generating PDF:", error);
     }
   }
 
@@ -78,73 +75,33 @@ export default function UploadComponent() {
     }
   };
 
-  function handleDownload() {
+  const handleDownload = () => {
     if (previewPdfUrl) {
-      const a = document.createElement('a');
+      const a = document.createElement("a");
       a.href = previewPdfUrl;
-      a.download = 'Summary.pdf';
+      a.download = "Summary.pdf";
       document.body.appendChild(a);
       a.click();
       a.remove();
     }
-  }
+  };
 
   return (
     <div className={`h-full w-full bg-black overflow-hidden flex mb-24`}>
       <div className="w-2/5 mt-8 ml-8 mr-24 flex items-center justify-center relative">
-        {!isSummaryVisible ? (
+        {!isSummaryVisible && (
           <Image
             fill
             src="/hero.jpg"
             alt="Background"
             className="object-contain max-h-full max-w-full"
           />
-        ) : (
-          <div className={`summary-section px-4 py-6 bg-black text-white flex flex-col justify-center items-center h-full w-full`}>
-            <div className="summary-content text-center">
-              {response ||
-                "The German Johannes Gutenberg introduced printing in Europe. His invention had a decisive contribution in spread of mass-learning and in building the basis of the modern society. Gutenberg's major invention was a practical system permitting the mass production of printed books."}
-              <button
-                onClick={() => {
-                  if (!isPdfVisible) {
-                    generatePdf(response!);
-                  } else {
-                    setIsPdfVisible(false);
-                  }
-                }}
-                className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
-              >
-                {isPdfVisible ? "Hide Pdf" : "Generate Pdf"}
-              </button>
-            </div>
-            {isPdfVisible && <div className="theme-options mt-4">
-              <button onClick={() => handleThemeChange("default")} className="mr-2 px-4 py-2 bg-gray-300 text-black rounded">
-                Light Theme
-              </button>
-              <button onClick={() => handleThemeChange("dark")} className="px-4 py-2 bg-gray-800 text-white rounded">
-                Dark Theme
-              </button>
-            </div>}
-            <div className="pdf-preview mt-6">
-              {isPdfVisible && previewPdfUrl && (
-                <>
-                  <h3 className="mb-4">PDF Preview</h3>
-                  <iframe
-                    src={previewPdfUrl}
-                    style={{ width: "100%", height: "500px", border: "none" }}
-                    title="PDF Preview"
-                  />
-                  <button onClick={handleDownload} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
-                    Download
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
         )}
       </div>
       <div className="flex flex-col justify-center pl-8 py-8 w-1/2">
-        <h1 className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}>
+        <h1
+          className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}
+        >
           Making Long Notes Short
           <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4b0082] via-[#ff00ff] to-[#1e90ff] animate-gradient mt-2">
@@ -152,7 +109,9 @@ export default function UploadComponent() {
           </span>
         </h1>
         <p className="text-lg font-normal text-gray-500 lg:text-xl dark:text-gray-400 tracking-wider">
-          Upload your document or book to receive summarized notes highlighting key points, available in multiple formats, and complemented with related questions to enhance understanding and retention.
+          Upload your document or book to receive summarized notes highlighting
+          key points, available in multiple formats, and complemented with
+          related questions to enhance understanding and retention.
         </p>
         <div className="flex w-full mt-10 py-4">
           <input
@@ -170,6 +129,14 @@ export default function UploadComponent() {
           </button>
         </div>
       </div>
+      <Summary
+        isOpen={isSummaryVisible}
+        closeModal={() => setIsSummaryVisible(false)}
+        summary={response}
+        pdfUrl={previewPdfUrl}
+        handleThemeChange={handleThemeChange}
+        handleDownload={handleDownload}
+      />
     </div>
   );
 }
