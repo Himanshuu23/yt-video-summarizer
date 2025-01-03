@@ -18,6 +18,7 @@ export default function UploadComponent() {
     default: null,
     dark: null,
   });
+  const [isPdfVisible, setIsPdfVisible] = useState(false);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const uploadedFile = e.target.files?.[0];
@@ -30,7 +31,6 @@ export default function UploadComponent() {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
-      
       const response = await fetch('http://localhost:8000/summarize-file', {
         method: 'POST',
         body: formData,
@@ -56,16 +56,14 @@ export default function UploadComponent() {
           'Content-type': 'application/json',
         },
       });
-
       const blob = await res.blob();
-      const url: any = window.URL.createObjectURL(blob);
-
+      const url = window.URL.createObjectURL(blob);
       setCachedPdfs((prev) => ({
         ...prev,
         [pdfTheme]: url,
       }));
-
       setPreviewPdfUrl(url);
+      setIsPdfVisible(true);
     } catch (error) {
       console.error('Error downloading PDF:', error);
     }
@@ -106,20 +104,29 @@ export default function UploadComponent() {
             <div className="summary-content text-center">
               {response ||
                 "The German Johannes Gutenberg introduced printing in Europe. His invention had a decisive contribution in spread of mass-learning and in building the basis of the modern society. Gutenberg's major invention was a practical system permitting the mass production of printed books."}
-              <button onClick={() => generatePdf(response!)} className="mt-4 bg-green-500 text-white px-4 py-2 rounded">
-                Generate Pdf
+              <button
+                onClick={() => {
+                  if (!isPdfVisible) {
+                    generatePdf(response!);
+                  } else {
+                    setIsPdfVisible(false);
+                  }
+                }}
+                className="mt-4 bg-green-500 text-white px-4 py-2 rounded"
+              >
+                {isPdfVisible ? "Hide Pdf" : "Generate Pdf"}
               </button>
             </div>
-            <div className="theme-options mt-4">
+            {isPdfVisible && <div className="theme-options mt-4">
               <button onClick={() => handleThemeChange("default")} className="mr-2 px-4 py-2 bg-gray-300 text-black rounded">
                 Light Theme
               </button>
               <button onClick={() => handleThemeChange("dark")} className="px-4 py-2 bg-gray-800 text-white rounded">
                 Dark Theme
               </button>
-            </div>
+            </div>}
             <div className="pdf-preview mt-6">
-              {previewPdfUrl && (
+              {isPdfVisible && previewPdfUrl && (
                 <>
                   <h3 className="mb-4">PDF Preview</h3>
                   <iframe
