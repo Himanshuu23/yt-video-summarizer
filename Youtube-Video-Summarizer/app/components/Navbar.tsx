@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { Poppins } from "next/font/google";
+import Login from './Login';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -16,7 +17,7 @@ export default function Navbar() {
             </div>
             <div className="flex gap-4">
                 <Link href="/pro" className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50">Pro</Link>
-                <Link href="#" className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50">Login</Link>
+                <Login />
             </div>
         </nav>
     );

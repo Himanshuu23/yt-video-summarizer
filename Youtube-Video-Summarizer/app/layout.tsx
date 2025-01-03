@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
+import Providers from "./providers/Provider";
 
 export const metadata: Metadata = { // -> * TO BE CHANGED! *
   title: "Summarify",
@@ -17,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <Providers>
+          <Navbar />
+            {children}
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
