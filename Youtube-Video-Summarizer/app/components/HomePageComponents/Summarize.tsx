@@ -70,7 +70,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   }, [pdfTheme, response]);
 
   return (
-    <div className="h-screen w-screen bg-black overflow-x-hidden flex my-16 flex-col md:flex-row">
+    <div className="h-screen w-screen bg-black overflow-hidden flex my-16 flex-col md:flex-row">
       <div className="flex flex-col justify-center p-8 w-full md:w-1/2">
         <h1
           className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}
@@ -102,8 +102,9 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
       </div>
       <div className="w-full md:w-2/5 h-full flex items-center justify-center relative mt-8 md:mt-0 md:ml-14">
         <Image
+          style={{transform: 'scale(115%)'}}
           fill
-          src="/hero.jpg"
+          src="/hero-1.png"
           alt="Background"
           className="object-contain max-h-full max-w-full"
         />
@@ -121,3 +122,4 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
 });
 
 export default Summarize;
+// make the play button for the summary as the voice button + NAME THE IMAGE CHANGE COMMIT MESSAGE AS "IMPLEMENTED WORKER POOL FOR PROCESSING TEXT CHUNKS "

@@ -26,7 +26,7 @@ const tiers = [
     priceMonthly: '$12',
     description: 'Unlock premium features for an enhanced experience.',
     features: [
-      'Enhanced and detailed summaries',
+      'Enhanced and detailed summaries + Questions',
       'Support for multiple languages',
       'Increased text length limit',
       'Advanced narration options',

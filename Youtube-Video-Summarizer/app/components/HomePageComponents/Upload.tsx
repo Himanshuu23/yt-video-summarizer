@@ -91,8 +91,9 @@ export default function UploadComponent() {
       <div className="w-full md:w-2/5 mt-8 ml-8 mr-24 flex items-center justify-center relative">
         {!isSummaryVisible && (
           <Image
+            style={{transform: 'scale(120%)'}}
             fill
-            src="/hero.jpg"
+            src="/hero-2.png"
             alt="Background"
             className="object-contain max-h-full max-w-full"
           />

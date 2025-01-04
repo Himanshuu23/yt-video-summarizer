@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import React, { useState } from "react";
 
 export default function Summary({
@@ -12,6 +13,7 @@ export default function Summary({
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null);
+  const [isPdfVisible, setIsPdfVisible] = useState(false);
 
   const toggleSpeech = () => {
     if (isPlaying) {
@@ -23,10 +25,13 @@ export default function Summary({
         newSpeech.onend = () => setIsPlaying(false);
         setSpeech(newSpeech);
       }
-      if (speech)
-        window.speechSynthesis.speak(speech);
+      if (speech) window.speechSynthesis.speak(speech);
       setIsPlaying(true);
     }
+  };
+
+  const togglePdfVisibility = () => {
+    setIsPdfVisible(!isPdfVisible);
   };
 
   return (
@@ -51,11 +56,15 @@ export default function Summary({
                 Summary
                 <button
                   onClick={toggleSpeech}
-                  className={`ml-4 px-4 py-2 bg-blue-500 text-white rounded text-sm ${
-                    isPlaying ? "bg-red-500" : "bg-green-500"
-                  }`}
+                  className="px-4 py-2 focus:outline:none rounded text-sm flex items-center justify-center"
                 >
-                  {isPlaying ? "Stop" : "Play"}
+                  <Image
+                    src={isPlaying ? "/stop.png" : "/play.png"}
+                    alt={isPlaying ? "Pause" : "Start"}
+                    width={24}
+                    height={24}
+                    className="invert"
+                  />
                 </button>
               </h2>
               <p className="text-sm leading-relaxed">{summary}</p>
@@ -77,22 +86,24 @@ export default function Summary({
                 </button>
               </div>
             </div>
-            {pdfUrl && (
-              <div>
-                <h3 className="text-lg font-semibold mb-2">PDF Preview</h3>
-                <iframe
-                  src={pdfUrl}
-                  style={{ width: "100%", height: "300px", border: "none" }}
-                  title="PDF Preview"
-                />
-                <button
-                  onClick={handleDownload}
-                  className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Download
-                </button>
-              </div>
-            )}
+            <div>
+              <button
+                onClick={togglePdfVisibility}
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                {isPdfVisible ? "Hide PDF" : "Show PDF"}
+              </button>
+              {isPdfVisible && pdfUrl && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">PDF Preview</h3>
+                  <iframe
+                    src={pdfUrl}
+                    style={{ width: "100%", height: "300px", border: "none" }}
+                    title="PDF Preview"
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
