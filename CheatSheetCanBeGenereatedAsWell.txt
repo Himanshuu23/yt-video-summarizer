@@ -26,3 +26,12 @@ TODO
 
 PRICING 
 ON THE BASIS OF USAGE FOR THE SAME AS PEOPLE WOULD BE UPLOADING LOADS OF DATA TO SUMMARIZE SO DIFFERENTIATE TIERS ON THE BASIS OF THAT ONLY
+
+HOW I DESTROY GPT AND ETC COZ THEY CAN GENERATE THE SUMMARY TOO FOR ANYTHING RIGHT?
+- WE WOULD BE PROVIDING FLOWCHART AND IMAGES SO WAY BETTER QUALITY NOTES AND IN MULTIPLE LANGUAGES, QUESTIONS/NUMERICALS AS WELL
+* but gpt can also do all those things for the same
+- FIRST OF ALL, GPT CANNOT PROVIDE THE IMAGES FOR THE THING TO MAKE THE STUDENT UNDERSTAND THE TOPIC AND ALSO THEIR ARE VERY LESS CHANCES FOR A STUDENT TO BE LIKE "can you please summarize this doc for me and then i am not able to understand can you make like a flowchart or something for the same????? like no one would do that obviously but here we automatically generate everything without asking and hence saving time as well
+- ALSO GPT CAN TAKE FILE INPUT AND IMAGE FOR A LIMITED NUMBER OF TIMES ONLY BUT WE CAN FOR ANY NUMBER OF TIMES!!
+
+
+hence the professors and teachers who usually just provide long ppt and pdf to the students making their work way easier and having world wide scope not just limited to specific country since we have the support for multiple languages and themes. And also it is a great startup idea as well since people can pay to get acceess to the premium features.
