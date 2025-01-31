@@ -21,9 +21,9 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
 
   async function handleSubmit(e: any) {
     e.preventDefault();
-    const response = await fetch("http://localhost:8000/summarize-url", {
+    const response = await fetch("http://localhost:8000/summarize", {
       method: "POST",
-      body: JSON.stringify({ videoUrl: JSON.stringify(url) }),
+      body: JSON.stringify({ videoUrl: url }),
       headers: { "Content-type": "application/json; charset=UTF-8" },
     });
     const data = await response.json();
