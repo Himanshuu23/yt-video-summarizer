@@ -1,0 +1,9 @@
+syntax = "proto3";
+option go_package = "github.com/Himanshuu23/yt-video-summarizer/backend/transcriber";
+
+service Transcriber {
+    rpc GetTranscript (TranscriptRequest) returns (TranscriptResponse);
+}
+
+message TranscriptRequest { string url = 1; }
+message TranscriptResponse { string transcript = 1; }

@@ -1,0 +1,9 @@
+syntax = "proto3";
+option go_package = "github.com/Himanshuu23/yt-video-summarizer/backend/summarizer";
+
+service Summarizer {
+    rpc Summarize (SummarizeRequest) returns (SummarizeResponse);
+}
+
+message SummarizeRequest { bytes transcript = 1; }
+message SummarizeResponse { string summary = 1; }
