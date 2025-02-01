@@ -1,4 +1,4 @@
-package main 
+package transcriber
 
 import (
     "context"
@@ -6,32 +6,30 @@ import (
     "log"
 
     "google.golang.org/grpc"
-    "github.com/Himanshuu23/yt-video-summarizer/backend/transcriber"
 )
 
 type myTranscriberServer struct {
-    transcriber.UnimplementedTranscriberServer
+    UnimplementedTranscriberServer
 }
 
-func (s myTranscriberServer) GetTranscript(context.Context, *transcriber.TranscriptRequest) (*TranscriptResponse, error) {
-   return &transcriber.TranscriptResponse{
-	transcript: "this are the transcript for the require youtube video"
-   }, nil 
+func (s myTranscriberServer) GetTranscript(ctx context.Context, req *TranscriptRequest) (*TranscriptResponse, error) {
+    return &TranscriptResponse{
+        Transcript: "These are the transcripts for the required YouTube video",
+    }, nil
 }
 
 func main() {
-    list, err := net.Listen( network: "tcp", address: ":8089")
+    lis, err := net.Listen("tcp", ":8089")
     if err != nil {
-	log.Fatalf(v...."cannot create listener: %s", err)
+        log.Fatalf("Cannot create listener: %v", err)
     }
 
-    serverRegistrar := grpc.NewServer()
+    server := grpc.NewServer()
     service := &myTranscriberServer{}
 
-    transcriber.RegisterTranscriberServer(serverRegistrar)
-    
-    err := serverRegistrar.Serve(list)
-    if err != nil {
-	log.Fatalf(format: "Impossible to serve: %s", err)
+    RegisterTranscriberServer(server, service)
+
+    if err := server.Serve(lis); err != nil {
+        log.Fatalf("Failed to serve: %v", err)
     }
 }
