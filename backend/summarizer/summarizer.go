@@ -1,4 +1,4 @@
-package main 
+package summarizer 
 
 import (
     "context"
@@ -6,32 +6,30 @@ import (
     "log"
 
     "google.golang.org/grpc"
-    "github.com/Himanshuu23/yt-video-summarizer/backend/summarizer"
 )
 
 type mySummarizerServer struct {
-    summarizer.UnimplementedSummarizerServer
+    UnimplementedSummarizerServer
 }
 
-func (s mySummarizerServer) GetTranscript(context.Context, *transcriber.TranscriptRequest) (*TranscriptResponse, error) {
-   return &transcriber.TranscriptResponse{
-	transcript: "this are the transcript for the require youtube video"
+func (s mySummarizerServer) Summarize(ctx context.Context, req *SummarizeRequest) (*SummarizeResponse, error) {
+   return &SummarizeResponse{
+	Summary: "this is the summary"
    }, nil 
 }
 
 func main() {
-    list, err := net.Listen( network: "tcp", address: ":8089")
+    list, err := net.Listen( "tcp", ":8089")
     if err != nil {
-	log.Fatalf(v...."cannot create listener: %s", err)
+	log.Fatalf("cannot create listener: %s", err)
     }
 
     serverRegistrar := grpc.NewServer()
-    service := &myTranscriberServer{}
+    service := &mySummarizerServer{}
 
-    transcriber.RegisterTranscriberServer(serverRegistrar)
-    
-    err := serverRegistrar.Serve(list)
-    if err != nil {
-	log.Fatalf(format: "Impossible to serve: %s", err)
+    RegisterSummarizerServer(serverRegistrar, service)
+
+    if err := server.Serve(lis); err != nil {
+	log.Fatalf("Failed to serve: %v", err)
     }
 }
