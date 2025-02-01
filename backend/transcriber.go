@@ -5,17 +5,17 @@ import (
     "log"
     "net"
 
-    "github.com/Himanshuu23/yt-video-summarizer/backend/transcript"
+    "github.com/Himanshuu23/yt-video-summarizer/backend/transcriber"
     "google.golang.org/grpc"
 )
 
 type myTranscriberServer struct {
-    transcript.UnimplementedTranscriberServer
+    transcriber.UnimplementedTranscriberServer
 }
 
-func (s *myTranscriberServer) GetTranscript(ctx context.Context, req *transcript.TranscriptRequest) (*transcript.TranscriptResponse, error) {
-    return &transcript.TranscriptResponse{
-        Transcript: "These are the transcripts for the required YouTube video",
+func (s *myTranscriberServer) GetTranscript(ctx context.Context, req *transcriber.TranscriptRequest) (*transcriber.TranscriptResponse, error) {
+    return &transcriber.TranscriptResponse{
+        Transcript: "These are the transcribers for the required YouTube video",
     }, nil
 }
 
@@ -28,7 +28,7 @@ func main() {
     grpcServer := grpc.NewServer()
     service := &myTranscriberServer{}
 
-    transcript.RegisterTranscriberServer(grpcServer, service)
+    transcriber.RegisterTranscriberServer(grpcServer, service)
 
     log.Println("Transcriber server is running on port 8089...")
     if err := grpcServer.Serve(lis); err != nil {
