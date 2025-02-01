@@ -1,54 +1,50 @@
 package main
 
 import (
+    "context"
     "fmt"
-    "net/http"
+    "log"
+    "time"
 
-    "github.com/gin-gonic/gin"
+    "google.golang.org/grpc"
+    "github.com/Himanshuu23/yt-video-summarizer/backend/transcriber"
+    "github.com/Himanshuu23/yt-video-summarizer/backend/summarizer"
 )
 
-type RequestBody struct {
-    VideoUrl string `json:"VideoUrl"`
-}
+func main() {
+    transcriberConn, err := grpc.Dial("localhost:8089", grpc.WithInsecure())
+    if err != nil {
+        log.Fatalf("Could not connect to transcriber server: %v", err)
+    }
+    defer transcriberConn.Close()
 
-func handle(c *gin.Context) {
-    c.JSON(200, gin.H{
-	"message":"from the server",
-    })
-}
+    transcriberClient := transcriber.NewTranscriberClient(transcriberConn)
 
-func summarize(c *gin.Context) {
-    var body RequestBody
-    
-    if err := c.BindJSON(&body); err != nil {
-	c.JSON(http.StatusBadRequest, gin.H{ "error": "Invalid JSON" })
-	return
+    transcriberReq := &transcriber.TranscriptRequest{Url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"}
+    ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
+    defer cancel()
+
+    transcriberRes, err := transcriberClient.GetTranscript(ctx, transcriberReq)
+    if err != nil {
+        log.Fatalf("Error calling GetTranscript: %v", err)
     }
 
-    c.JSON(http.StatusOK, gin.H{
-	"message": "Data recieved",
-	"videoUrl": body.VideoUrl,
-    })
+    fmt.Println("Received Transcript:", transcriberRes.Transcript)
 
-    fmt.Println(body.VideoUrl)
-}
+    summarizerConn, err := grpc.Dial("localhost:8090", grpc.WithInsecure()) // Assuming the summarizer server runs on 8090
+    if err != nil {
+        log.Fatalf("Could not connect to summarizer server: %v", err)
+    }
+    defer summarizerConn.Close()
 
-func main() {
-    router := gin.Default()
-    
-    router.Use(func(c *gin.Context) {
-        c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
-        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
-        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-        if c.Request.Method == "OPTIONS" {
-            c.AbortWithStatus(http.StatusNoContent)
-            return
-        }
-        c.Next()
-    })
-    
-    router.GET("/", handle)
-    router.POST("/summarize", summarize)
+    summarizerClient := summarizer.NewSummarizerClient(summarizerConn)
 
-    router.Run("localhost:8000")
+    summarizerReq := &summarizer.SummarizeRequest{Transcript: []byte(transcriberRes.Transcript)}
+
+    summarizerRes, err := summarizerClient.Summarize(ctx, summarizerReq)
+    if err != nil {
+        log.Fatalf("Error calling Summarize: %v", err)
+    }
+
+    fmt.Println("Received Summary:", summarizerRes.Summary)
 }
