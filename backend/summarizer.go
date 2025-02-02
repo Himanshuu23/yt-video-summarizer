@@ -7,7 +7,6 @@ import (
     "bytes"
     "encoding/json"
     "net/http"
-    "fmt"
 
     "google.golang.org/grpc"
     "context"
@@ -25,11 +24,11 @@ const API_KEY = "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"
 
 func summarizeText(text string) (string, error) {
     requestBody := map[string]interface{}{
-	"inputs": text,
-	"parameters": map[string]int{
-	    "max_length": 150,
-	    "min_length": 50,
-	},
+        "inputs": text,
+        "parameters": map[string]int{
+            "max_length": 150,
+            "min_length": 50,
+        },
     }
 
     body, err := json.Marshal(requestBody)
@@ -51,23 +50,24 @@ func summarizeText(text string) (string, error) {
     }
     defer resp.Body.Close()
 
-    var response map[string]interface{}
+    var response []interface{}
     if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
         return "", err
     }
 
-    if summary, ok := response["summary_text"].(string); ok {
-        return summary, nil
+    responseBody, err := json.Marshal(response)
+    if err != nil {
+        return "", err
     }
 
-    return "", fmt.Errorf("unexpected response format")
+    return string(responseBody), nil
 }
 
 func (s *mySummarizerServer) Summarize(ctx context.Context, req *summarizer.SummarizeRequest) (*summarizer.SummarizeResponse, error) {
     res, err := summarizeText(string(req.Transcript))
     if err != nil {
-	log.Fatalf("Error summarizing text: %v", err)
-	return nil, err
+        log.Fatalf("Error summarizing text: %v", err)
+        return nil, err
     }
     return &summarizer.SummarizeResponse{Summary: res}, nil
 }
