@@ -4,7 +4,9 @@ import (
     "context"
     "log"
     "net"
+    "os"
 
+    "github.com/joho/godotenv"
     "github.com/Himanshuu23/yt-video-summarizer/backend/transcriber"
     "google.golang.org/grpc"
 )
@@ -20,7 +22,17 @@ func (s *myTranscriberServer) GetTranscript(ctx context.Context, req *transcribe
 }
 
 func main() {
-    lis, err := net.Listen("tcp", ":8089")
+    err := godotenv.Load()
+    if err != nil {
+	log.Fatalf("Error loading .env file")
+    }
+
+    port := os.Getenv("SERVER_ONE_PORT")
+    if port == "" {
+	port = "8089"
+    }
+
+    lis, err := net.Listen("tcp", ":"+port)
     if err != nil {
         log.Fatalf("Cannot create listener: %v", err)
     }
