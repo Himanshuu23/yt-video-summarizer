@@ -31,7 +31,7 @@ func main() {
 
     fmt.Println("Received Transcript:", transcriberRes.Transcript)
 
-    summarizerConn, err := grpc.Dial("localhost:8090", grpc.WithInsecure()) // Assuming the summarizer server runs on 8090
+    summarizerConn, err := grpc.Dial("localhost:8090", grpc.WithInsecure())
     if err != nil {
         log.Fatalf("Could not connect to summarizer server: %v", err)
     }
