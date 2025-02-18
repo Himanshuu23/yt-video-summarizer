@@ -37,7 +37,7 @@ func main() {
 
     transcriberClient := transcriber.NewTranscriberClient(transcriberConn)
 
-    transcriberReq := &transcriber.TranscriptRequest{Url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"} // get this ytUrl from the http server through which we would be talking to the frontend
+    transcriberReq := &transcriber.TranscriptRequest{Url: "https://youtu.be/9ckCTsyDRok?si=Gex5bd-J7yGV5zYP"} // get this ytUrl from the http server through which we would be talking to the frontend
     ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
     defer cancel()
 
