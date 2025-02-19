@@ -2,6 +2,7 @@ import React, { forwardRef, useState, useEffect } from "react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
 import Summary from "../Summary";
+import { ThemeType } from "@/app/types/theme";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -13,7 +14,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   const [response, setResponse] = useState<string | null>(null);
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const [pdfTheme, setPdfTheme] = useState("default");
-  const [cachedPdfs, setCachedPdfs] = useState({
+  const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
     default: null,
     dark: null,
   });
@@ -21,7 +22,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
 
   async function handleSubmit(e: any) {
     e.preventDefault();
-    const response = await fetch("http://localhost:8000/summarize-url", {
+    const response = await fetch("http://localhost:8000/summarize/url", {
       method: "POST",
       body: JSON.stringify({ videoUrl: JSON.stringify(url) }),
       headers: { "Content-type": "application/json; charset=UTF-8" },
@@ -32,7 +33,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   }
 
   async function generatePdf(response: string) {
-    const res = await fetch("http://localhost:8000/generate-pdf", {
+    const res = await fetch("http://localhost:8000/pdf", {
       method: "POST",
       body: JSON.stringify({ summary: response, theme: pdfTheme }),
       headers: { "Content-type": "application/json" },
@@ -109,17 +110,16 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
           className="object-contain max-h-full max-w-full"
         />
       </div>
-      <Summary
+      {response && <Summary
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
         summary={response}
         pdfUrl={previewPdfUrl}
         handleThemeChange={handleThemeChange}
         handleDownload={handleDownload}
-      />
+      />}
     </div>
   );  
 });
 
 export default Summarize;
-// make the play button for the summary as the voice button + NAME THE IMAGE CHANGE COMMIT MESSAGE AS "IMPLEMENTED WORKER POOL FOR PROCESSING TEXT CHUNKS "

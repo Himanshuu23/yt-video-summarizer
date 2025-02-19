@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
 import Summary from "../Summary";
+import { ThemeType } from "@/app/types/theme";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -16,7 +17,7 @@ export default function UploadComponent() {
   const [response, setResponse] = useState<string | null>(null);
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const [pdfTheme, setPdfTheme] = useState("default");
-  const [cachedPdfs, setCachedPdfs] = useState({
+  const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
     default: null,
     dark: null,
   });
@@ -33,7 +34,7 @@ export default function UploadComponent() {
       const formData = new FormData();
       formData.append("file", file);
       try {
-        const res = await fetch("http://localhost:8000/summarize-file", {
+        const res = await fetch("http://localhost:8000/summarize/file", {
           method: "POST",
           body: formData,
         });
@@ -49,7 +50,7 @@ export default function UploadComponent() {
 
   async function generatePdf(summary: string) {
     try {
-      const res = await fetch("http://localhost:8000/generate-pdf", {
+      const res = await fetch("http://localhost:8000/pdf", {
         method: "POST",
         body: JSON.stringify({ summary, theme: pdfTheme }),
         headers: { "Content-Type": "application/json" },
