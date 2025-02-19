@@ -19,6 +19,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     dark: null,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("")
 
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -117,6 +118,8 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
         pdfUrl={previewPdfUrl}
         handleThemeChange={handleThemeChange}
         handleDownload={handleDownload}
+        selectedLanguage={selectedLanguage}
+        setSelectedLanguage={setSelectedLanguage}
       />}
     </div>
   );  

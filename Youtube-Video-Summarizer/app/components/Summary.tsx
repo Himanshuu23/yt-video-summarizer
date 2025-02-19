@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+// make the state for the selectedLanguage in the summary component and pass that as the prop and use event listener if changed then refetch or something + maybe add some button for regenerating the summary and it should only show up if the language has been changed by the user else not
 export default function Summary({
   isOpen,
   closeModal,
@@ -10,10 +10,13 @@ export default function Summary({
   pdfUrl,
   handleThemeChange,
   handleDownload,
+  selectedLanguage,
+  setSelectedLanguage
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null);
   const [isPdfVisible, setIsPdfVisible] = useState(false);
+  const [languages, setLanguages] = useState({})
 
   const toggleSpeech = () => {
     if (isPlaying) {
@@ -34,6 +37,12 @@ export default function Summary({
     setIsPdfVisible(!isPdfVisible);
   };
 
+  useEffect(() => {
+    fetch('/languages.json')
+    .then((res) => res.json())
+    .then((json) => setLanguages(json))
+  })
+
   return (
     isOpen && (
       <div
@@ -52,20 +61,28 @@ export default function Summary({
           </button>
           <div className="flex flex-col space-y-6">
             <div>
-              <h2 className="text-xl font-bold mb-4 flex items-center">
+            <h2 className="text-xl font-bold mb-4 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
                 Summary
-                <button
-                  onClick={toggleSpeech}
-                  className="px-4 py-2 focus:outline:none rounded text-sm flex items-center justify-center"
+              <button
+                onClick={toggleSpeech}
+                className="px-4 py-2 focus:outline-none rounded text-sm flex items-center justify-center"
                 >
-                  <Image
-                    src={isPlaying ? "/stop.png" : "/play.png"}
-                    alt={isPlaying ? "Pause" : "Start"}
-                    width={24}
-                    height={24}
-                    className="invert"
-                  />
-                </button>
+                <Image
+                  src={isPlaying ? "/stop.png" : "/play.png"}
+                  alt={isPlaying ? "Pause" : "Start"}
+                  width={24}
+                  height={24}
+                  className="invert"
+                />
+              </button>
+            </div>
+                <select defaultValue={selectedLanguage} onChange={(e) => setSelectedLanguage(e.target.value)} className="bg-black font-light text-white w-32 mr-8">
+                  {languages &&
+                    Object.entries(languages).map(([language, code]) => (                    
+                    code =="en"? <option selected key={code} value={code}>{language}</option>:<option key={code} value={code}>{language}</option>
+                  ))}
+                </select>
               </h2>
               <p className="text-sm leading-relaxed">{summary}</p>
             </div>
