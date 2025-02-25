@@ -65,17 +65,6 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     }
   };
 
-  const handleDownload = () => {
-    if (previewPdfUrl) {
-      const a = document.createElement("a");
-      a.href = previewPdfUrl;
-      a.download = "Summary.pdf";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
-  };
-
   useEffect(() => {
     if (response && !cachedPdfs[pdfTheme]) {
       generatePdf(response);
@@ -132,7 +121,6 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
         summary={response}
         pdfUrl={previewPdfUrl}
         handleThemeChange={handleThemeChange}
-        handleDownload={handleDownload}
         selectedLanguage={selectedLanguage}
         setSelectedLanguage={setSelectedLanguage}
       />}

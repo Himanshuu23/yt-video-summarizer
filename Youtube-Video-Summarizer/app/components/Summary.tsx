@@ -2,17 +2,17 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-// make the state for the selectedLanguage in the summary component and pass that as the prop and use event listener if changed then refetch or something + maybe add some button for regenerating the summary and it should only show up if the language has been changed by the user else not
+import { SummaryProps } from "../types/summary";
+
 export default function Summary({
   isOpen,
   closeModal,
   summary,
   pdfUrl,
   handleThemeChange,
-  handleDownload,
   selectedLanguage,
   setSelectedLanguage
-}) {
+}:SummaryProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null);
   const [isPdfVisible, setIsPdfVisible] = useState(false);
@@ -79,7 +79,7 @@ export default function Summary({
             </div>
                 <select defaultValue={selectedLanguage} onChange={(e) => setSelectedLanguage(e.target.value)} className="bg-black font-light text-white w-32 mr-8">
                   {languages &&
-                    Object.entries(languages).map(([language, code]) => (                    
+                    Object.entries(languages as [string, string]).map(([language, code]) => (                    
                     code =="en"? <option selected key={code} value={code}>{language}</option>:<option key={code} value={code}>{language}</option>
                   ))}
                 </select>
