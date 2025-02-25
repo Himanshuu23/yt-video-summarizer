@@ -26,7 +26,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     const response = await fetch("http://localhost:8000/summarize/url", {
       method: "POST",
       body: JSON.stringify({ videoUrl: JSON.stringify(url) }),
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+      headers: { "Content-type": "application/json" },
     });
     const data = await response.json();
     setResponse(data.summary);
