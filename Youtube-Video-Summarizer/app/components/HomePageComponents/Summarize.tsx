@@ -11,7 +11,7 @@ const poppins = Poppins({
 
 const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   const [url, setUrl] = useState("");
-  const [response, setResponse] = useState<string | null>(null);
+  const [response, setResponse] = useState<string>("");
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const [pdfTheme, setPdfTheme] = useState("default");
   const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
@@ -45,6 +45,17 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     setPreviewPdfUrl(url);
   }
 
+  async function translateSummary(language: string, text: string) {
+    const response = await fetch("http://localhost:8000/translate", {
+      method: "POST",
+      body: JSON.stringify({ text: text, lang: language }),
+      headers: { "Content-type": "application/json" },
+    });
+
+    const result = await response.json()
+    setResponse(result.translatedText)
+  }
+
   const handleThemeChange = (theme: string) => {
     setPdfTheme(theme);
     if (cachedPdfs[theme]) {
@@ -70,6 +81,10 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
       generatePdf(response);
     }
   }, [pdfTheme, response]);
+
+  useEffect(() => {
+    translateSummary(selectedLanguage, response)
+  }, [selectedLanguage])
 
   return (
     <div className="h-screen w-screen bg-black overflow-hidden flex my-16 flex-col md:flex-row">
