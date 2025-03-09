@@ -11,7 +11,7 @@ const poppins = Poppins({
 
 const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   const [url, setUrl] = useState("");
-  const [response, setResponse] = useState<string>("");
+  const [response, setResponse] = useState<string>(" ");
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const [pdfTheme, setPdfTheme] = useState("default");
   const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
@@ -19,7 +19,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     dark: null,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("")
+  const [selectedLanguage, setSelectedLanguage] = useState("en")
 
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -74,6 +74,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
 
   useEffect(() => {
     translateSummary(selectedLanguage, response)
+    generatePdf(response)
   }, [selectedLanguage])
 
   return (
