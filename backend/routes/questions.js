@@ -1,5 +1,5 @@
-const express = require("express");
 const { generateQuestions } = require("../controllers/questions");
+const express = require("express");
 
 const router = express.Router();
 
