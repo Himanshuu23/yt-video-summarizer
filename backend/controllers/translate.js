@@ -1,6 +1,7 @@
 const { translate } = require('@vitalets/google-translate-api')
 
 const translateText = (req, res) => {
+    console.log(req.body)
     const { text, lang } = req.body
 
     translate(text, { to: lang })
