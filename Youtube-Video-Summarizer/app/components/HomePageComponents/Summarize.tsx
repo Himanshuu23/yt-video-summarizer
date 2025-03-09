@@ -46,14 +46,15 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   }
 
   async function translateSummary(language: string, text: string) {
-    const response = await fetch("http://localhost:8000/translate", {
+    const res = await fetch("http://localhost:8000/translate", {
       method: "POST",
       body: JSON.stringify({ text: text, lang: language }),
       headers: { "Content-type": "application/json" },
     });
 
-    const result = await response.json()
+    const result = await res.json()
     setResponse(result.translatedText)
+    // generatePdf(response)
   }
 
   const handleThemeChange = (theme: string) => {

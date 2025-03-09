@@ -8,7 +8,8 @@ const translateText = (req, res) => {
         res.json({ translatedText: response.text })
     })
     .catch(error => {
-        res.status(500).json({ error: error })
+        console.log(error)
+	res.status(500).json({ error: error })
     })
 }
 

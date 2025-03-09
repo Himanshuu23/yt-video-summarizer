@@ -86,7 +86,7 @@ export default function Summary({
               </h2>
               <p className="text-sm leading-relaxed">{summary}</p>
             </div>
-            <div>
+            {isPdfVisible && <div>
               <h3 className="text-lg font-semibold mb-2">PDF Options</h3>
               <div className="flex space-x-4">
                 <button
@@ -102,7 +102,7 @@ export default function Summary({
                   Dark Theme
                 </button>
               </div>
-            </div>
+            </div>}
             <div>
               <button
                 onClick={togglePdfVisibility}
