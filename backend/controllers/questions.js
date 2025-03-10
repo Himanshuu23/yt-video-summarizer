@@ -11,7 +11,7 @@ const generateQuestions = async (req, res) => {
     })
 
     const data = await response.json()
-    console.log(data)
+    console.log(data[0].generated_text)
     return res.json({ res: data })
 }
 

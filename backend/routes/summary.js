@@ -11,7 +11,7 @@ const upload = multer({ storage: storage });
 router.post('/url', summarizeVideo)
 
 router.post('/file', upload.single('file'), async (req, res) => {
-    // due for a while for the same 
+    // due...
 });
 
 module.exports = router;

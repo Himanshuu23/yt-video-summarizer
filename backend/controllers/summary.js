@@ -19,6 +19,7 @@ const summarizeVideo = async (req, res) => {
     }
 
     let videoId;
+
     if (videoUrl.includes('youtu.be')) {
         videoId = videoUrl.split('/').pop().split('?')[0];
     } else if (videoUrl.includes('v=')) {
@@ -52,7 +53,7 @@ const summarizeText = async () => {
         res.json({ summary: finalSummary });
     } catch (error) {
         res.status(500).json({ error: error.message });
-    }
+    }   
 }
 
 module.exports = { summarizeVideo, summarizeText };
