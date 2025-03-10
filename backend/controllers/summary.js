@@ -2,6 +2,7 @@ const pdfParse = require('pdf-parse');
 const fetchTranscript = require('../utils/transcript');
 const summarizeTextInChunks = require('../utils/summary');
 const { cleanSummary, cleanHTMLentities } = require('../utils/cleaner');
+const { generateQuestions } = require('../utils/questions');
 
 const extractTextFromDocument = (fileBuffer) => {
     return new Promise((resolve, reject) => {
@@ -13,7 +14,7 @@ const extractTextFromDocument = (fileBuffer) => {
 
 const summarizeVideo = async (req, res) => {
     const { videoUrl } = req.body;
-
+    
     if (!videoUrl) {
         return res.status(400).json({ error: 'YouTube video URL is required.' });
     }
@@ -33,7 +34,8 @@ const summarizeVideo = async (req, res) => {
         const summary = await summarizeTextInChunks(transcript);
         const betterSummary = cleanSummary(summary);
         const finalSummary = cleanHTMLentities(betterSummary);
-        res.json({ summary: finalSummary });
+        const questions = await generateQuestions(finalSummary)
+        res.json({ summary: finalSummary, questions: questions });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
