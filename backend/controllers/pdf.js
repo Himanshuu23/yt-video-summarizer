@@ -1,7 +1,7 @@
 const  PDFDocument = require('pdfkit')
 
 const generatePdf = (req, res) => {
-        const { summary, theme, questions } = req.body;
+        const { summary, theme, questions, buffer } = req.body;
         
         if (!summary) {
             return res.status(400).send('Summary is required');
@@ -31,6 +31,7 @@ const generatePdf = (req, res) => {
         doc.fontSize(16).fillColor(theme === 'dark' ? 'white' : 'black').text('YouTube Video Summary', { align: 'center' });
         doc.moveDown();
         doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text(summary);
+        // doc.image(buffer, { align: 'center' });
         doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text('Questions & Answers', { align: 'center' });
         doc.moveDown();
         doc.fontSize(12).fillColor(theme == 'dark' ? 'white' : 'black').text(questions);

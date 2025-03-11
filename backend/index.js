@@ -3,7 +3,6 @@ const cors = require('cors')
 const summaryRouter = require('./routes/summary.js')
 const pdfRouter = require('./routes/pdf.js')
 const translateRouter = require('./routes/translate.js')
-const imageRoute = require('./routes/image.js')
 
 const app = express()
 
@@ -14,7 +13,6 @@ app.use(express.json());
 app.use('/summarize', summaryRouter)
 app.use('/pdf', pdfRouter)
 app.use('/translate', translateRouter)
-app.use('/generate-image', imageRoute)
 
 app.listen(PORT, () => {
     console.log(`Server Started at PORT: ${PORT}`)

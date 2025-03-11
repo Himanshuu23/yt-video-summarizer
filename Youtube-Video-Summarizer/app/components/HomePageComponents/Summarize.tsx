@@ -21,6 +21,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("en")
   const [questions, setQuestions] = useState<string>("")
+  const [imageBuffer, setImageBuffer] = useState<string>("")
 
   async function handleSubmit(e: any) {
     e.preventDefault();
@@ -32,11 +33,11 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     const data = await response.json();
     setResponse(data.summary);
     setQuestions(data.questions)
-    generatePdf(data.response, data.questions)
+    setImageBuffer(data.buffer)
     setIsModalOpen(true);
   }
 
-  async function generatePdf(response: string, questions: string) {
+  async function generatePdf(response: string, questions: string, buffer: string) {
     const res = await fetch("http://localhost:8000/pdf", {
       method: "POST",
       body: JSON.stringify({ summary: response, theme: pdfTheme, questions: questions }),
@@ -57,7 +58,6 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
 
     const result = await res.json()
     setResponse(result.translatedText)
-    generatePdf(response, questions)
   }
 
   const handleThemeChange = (theme: string) => {
@@ -65,19 +65,19 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     if (cachedPdfs[theme]) {
       setPreviewPdfUrl(cachedPdfs[theme]);
     } else if (response) {
-      generatePdf(response, questions);
+      generatePdf(response, questions, imageBuffer);
     }
   };
 
   useEffect(() => {
     if (response && !cachedPdfs[pdfTheme]) {
-      generatePdf(response, questions);
+      generatePdf(response, questions, imageBuffer);
     }
   }, [pdfTheme, response]);
 
   useEffect(() => {
     translateSummary(selectedLanguage, response)
-    generatePdf(response, questions)
+    generatePdf(response, questions, imageBuffer)
   }, [selectedLanguage])
 
   return (
@@ -124,11 +124,13 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
         summary={response}
+        imageBuffer={imageBuffer}
         questions={questions}
         pdfUrl={previewPdfUrl}
         handleThemeChange={handleThemeChange}
         selectedLanguage={selectedLanguage}
         setSelectedLanguage={setSelectedLanguage}
+        generatePdf={generatePdf}
       />}
     </div>
   );  

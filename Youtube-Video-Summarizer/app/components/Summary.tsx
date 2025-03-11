@@ -9,10 +9,12 @@ export default function Summary({
   closeModal,
   summary,
   questions,
+  imageBuffer,
   pdfUrl,
   handleThemeChange,
   selectedLanguage,
   setSelectedLanguage,
+  generatePdf
 }:SummaryProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null);
@@ -111,7 +113,12 @@ export default function Summary({
                 onClick={togglePdfVisibility}
                 className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
               >
-                {isPdfVisible ? "Hide PDF" : "Show PDF"}
+              </button>
+              <button
+                onClick={() => generatePdf(summary, questions, imageBuffer)}
+                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                Generate
               </button>
               {isPdfVisible && pdfUrl && (
                 <div>

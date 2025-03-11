@@ -3,6 +3,7 @@ const fetchTranscript = require('../utils/transcript');
 const summarizeTextInChunks = require('../utils/summary');
 const { cleanSummary, cleanHTMLentities } = require('../utils/cleaner');
 const { generateQuestions } = require('../utils/questions');
+const { generateImage } = require('../utils/image');
 
 const extractTextFromDocument = (fileBuffer) => {
     return new Promise((resolve, reject) => {
@@ -34,8 +35,9 @@ const summarizeVideo = async (req, res) => {
         const summary = await summarizeTextInChunks(transcript);
         const betterSummary = cleanSummary(summary);
         const finalSummary = cleanHTMLentities(betterSummary);
-        const questions = await generateQuestions(finalSummary)
-        res.json({ summary: finalSummary, questions: questions });
+        const questions = await generateQuestions(finalSummary);
+        const buffer = await generateImage(finalSummary);
+        res.json({ summary: finalSummary, questions: questions, buffer: buffer });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
