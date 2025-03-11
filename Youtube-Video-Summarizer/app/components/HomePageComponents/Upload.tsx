@@ -88,7 +88,7 @@ export default function UploadComponent() {
   };
 
   return (
-    <div className={`h-full w-full bg-black overflow-hidden flex mb-24 flex-col md:flex-row`}>
+    <div id="notes" className={`h-full w-full bg-black overflow-hidden flex mb-24 flex-col md:flex-row`}>
       <div className="w-full md:w-2/5 mt-8 ml-8 mr-24 flex items-center justify-center relative">
         {!isSummaryVisible && (
           <Image

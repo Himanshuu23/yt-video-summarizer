@@ -42,11 +42,11 @@ export default function Login() {
      >
        <button
          onClick={closeModal}
-         className="absolute p-2 top-1 right-2 text-white text-2xl"
+         className="absolute p-2 top-1 right-2 text-white text-4xl"
        >
          &times;
        </button>
-       <div className="text-white text-center mb-4">Login using</div>
+       <div className="text-white text-center mb-4 font-bold text-2xl">Login using</div>
        <div className="flex justify-center space-x-4">
          <button onClick={() => handleLogin("google")} className="flex items-center justify-center w-12 h-12">
            <div className="transform scale-125">

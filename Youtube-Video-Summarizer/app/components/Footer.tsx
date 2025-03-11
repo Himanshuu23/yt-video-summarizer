@@ -8,7 +8,7 @@ const poppins = Poppins({
 
 export default function Footer() {
   return (
-    <footer className={`${poppins.className} bg-black text-gray-400 py-8 mt-24`}>
+    <footer className={`${poppins.className} bg-black text-gray-400 py-8 mt-32`}>
       <div className="text-center space-y-6">
         <p className="text-sm">
           Need help? Email{' '}
@@ -37,19 +37,13 @@ export default function Footer() {
           <p className="font-bold text-gray-400 text-sm">HELPFUL LINKS</p>
           <div className="flex justify-center space-x-4 mt-2">
             <Link legacyBehavior href="#">
-              <a className="text-gray-400 hover:text-white text-sm">Courses</a>
+              <a className="text-gray-400 hover:text-white text-sm">Docs</a>
             </Link>
             <Link legacyBehavior href="#">
-              <a className="text-gray-400 hover:text-white text-sm">Labs</a>
+              <a className="text-gray-400 hover:text-white text-sm">Pricing</a>
             </Link>
             <Link legacyBehavior href="#">
-              <a className="text-gray-400 hover:text-white text-sm">Snippets</a>
-            </Link>
-            <Link legacyBehavior href="#">
-              <a className="text-gray-400 hover:text-white text-sm">Tags</a>
-            </Link>
-            <Link legacyBehavior href="#">
-              <a className="text-gray-400 hover:text-white text-sm">Contrib</a>
+              <a className="text-gray-400 hover:text-white text-sm">Contribute</a>
             </Link>
             <Link legacyBehavior href="#">
               <a className="text-gray-400 hover:text-white text-sm">Privacy</a>
@@ -59,7 +53,7 @@ export default function Footer() {
             </Link>
           </div>
         </div>
-        <p className="text-xs text-gray-400">Copyright &copy; 2024 summary LLC</p>
+        <p className="text-xs text-gray-400">Copyright &copy; 2025 Summarify LLC</p>
       </div>
     </footer>
   );

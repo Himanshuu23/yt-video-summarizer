@@ -81,7 +81,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   }, [selectedLanguage])
 
   return (
-    <div className="h-screen w-screen bg-black overflow-hidden flex my-16 flex-col md:flex-row">
+    <div id="video" className="h-screen w-screen bg-black overflow-hidden flex my-16 flex-col md:flex-row">
       <div className="flex flex-col justify-center p-8 w-full md:w-1/2">
         <h1
           className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}
