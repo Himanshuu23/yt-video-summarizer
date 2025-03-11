@@ -33,7 +33,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     const data = await response.json();
     setResponse(data.summary);
     setQuestions(data.questions)
-    setImageBuffer(data.buffer)
+    setImageBuffer(`data:image/png;base64,${data.buffer}`)
     setIsModalOpen(true);
   }
 

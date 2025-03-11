@@ -31,7 +31,12 @@ const generatePdf = (req, res) => {
         doc.fontSize(16).fillColor(theme === 'dark' ? 'white' : 'black').text('YouTube Video Summary', { align: 'center' });
         doc.moveDown();
         doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text(summary);
-        // doc.image(buffer, { align: 'center' });
+        
+        if (buffer) {
+            const imgBuffer = Buffer.from(buffer, 'base64')
+            doc.image(imgBuffer, { fit: [250, 250], align: 'center' })
+        }
+
         doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text('Questions & Answers', { align: 'center' });
         doc.moveDown();
         doc.fontSize(12).fillColor(theme == 'dark' ? 'white' : 'black').text(questions);

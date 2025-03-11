@@ -17,9 +17,7 @@ const generateImage = async (prompt = "monkey doing pushups") => {
         }
 
         const json = await response.json()
-        const buffer = Buffer.from(json.image_data, 'base64')
-
-        return buffer
+        return json.image_data
     } catch (error) {
         return error
     }
