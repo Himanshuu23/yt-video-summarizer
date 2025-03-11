@@ -8,10 +8,11 @@ export default function Summary({
   isOpen,
   closeModal,
   summary,
+  questions,
   pdfUrl,
   handleThemeChange,
   selectedLanguage,
-  setSelectedLanguage
+  setSelectedLanguage,
 }:SummaryProps) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null);
@@ -85,6 +86,8 @@ export default function Summary({
                 </select>
               </h2>
               <p className="text-sm leading-relaxed">{summary}</p>
+              <h2>Questions & Answers</h2>
+              <p className="text-sm leading-relaxed">{questions}</p>
             </div>
             {isPdfVisible && <div>
               <h3 className="text-lg font-semibold mb-2">PDF Options</h3>
