@@ -14,13 +14,16 @@ const poppins = Poppins({
 export default function UploadComponent() {
   const [isSummaryVisible, setIsSummaryVisible] = useState(false);
   const [file, setFile] = useState<File | null>(null);
-  const [response, setResponse] = useState<string | null>(null);
+  const [response, setResponse] = useState<string>("");
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const [pdfTheme, setPdfTheme] = useState("default");
   const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
     default: null,
     dark: null,
   });
+  const [selectedLanguage, setSelectedLanguage] = useState("en")
+    const [questions, setQuestions] = useState<string>("")
+    const [imageBuffer, setImageBuffer] = useState<string>("")
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const uploadedFile = e.target.files?.[0];
@@ -40,6 +43,8 @@ export default function UploadComponent() {
         });
         const data = await res.json();
         setResponse(data.summary);
+        setQuestions(data.questions);
+        setImageBuffer(`data:image/png;base64,${data.buffer}`)
         setIsSummaryVisible(true);
         generatePdf(data.summary);
       } catch (error) {
@@ -137,7 +142,11 @@ export default function UploadComponent() {
         summary={response}
         pdfUrl={previewPdfUrl}
         handleThemeChange={handleThemeChange}
-        handleDownload={handleDownload}
+        imageBuffer={imageBuffer}
+        questions={questions}
+        selectedLanguage={selectedLanguage}
+        setSelectedLanguage={setSelectedLanguage}
+        generatePdf={generatePdf}
       />
     </div>
   );   
