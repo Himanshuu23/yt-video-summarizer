@@ -91,7 +91,14 @@ export default function Summary({
               <p className="text-sm leading-relaxed">{summary}</p>
               <h2>Questions & Answers</h2>
               <p className="text-sm leading-relaxed">{questions}</p>
+              <button
+                onClick={handlePdf}
+                className="bg-blue-500 text-white px-4 py-2 rounded mt-2"
+              >
+                {isPdfVisible? 'Regenerate' : 'Generate PDF'}
+            </button>
             </div>
+            
             {isPdfVisible && <div>
               <h3 className="text-lg font-semibold mb-2">PDF Options</h3>
               <div className="flex space-x-4">
@@ -112,15 +119,7 @@ export default function Summary({
             <div>
               {isPdfVisible && pdfUrl && (
                 <div>
-                  <div className="flex justify-between mb-2">
                     <h3 className="text-lg font-semibold">PDF Preview</h3>
-                    <button
-                      onClick={handlePdf}
-                      className="bg-blue-500 text-white px-4 py-2 mb-2 rounded"
-                    >
-                      {isPdfVisible? 'Regenerate' : 'Generate'}
-                    </button>
-                  </div>
                   <iframe
                     src={pdfUrl}
                     style={{ width: "100%", height: "300px", border: "none" }}
