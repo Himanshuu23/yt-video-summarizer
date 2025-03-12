@@ -36,9 +36,10 @@ export default function Summary({
     }
   };
 
-  const togglePdfVisibility = () => {
-    setIsPdfVisible(!isPdfVisible);
-  };
+  const handlePdf = () => {
+    generatePdf(summary, questions, imageBuffer)
+    setIsPdfVisible(true)
+  }
 
   useEffect(() => {
     fetch('/languages.json')
@@ -109,20 +110,17 @@ export default function Summary({
               </div>
             </div>}
             <div>
-              <button
-                onClick={togglePdfVisibility}
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-              >
-              </button>
-              <button
-                onClick={() => generatePdf(summary, questions, imageBuffer)}
-                className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                Generate
-              </button>
               {isPdfVisible && pdfUrl && (
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">PDF Preview</h3>
+                  <div className="flex justify-between mb-2">
+                    <h3 className="text-lg font-semibold">PDF Preview</h3>
+                    <button
+                      onClick={handlePdf}
+                      className="bg-blue-500 text-white px-4 py-2 mb-2 rounded"
+                    >
+                      {isPdfVisible? 'Regenerate' : 'Generate'}
+                    </button>
+                  </div>
                   <iframe
                     src={pdfUrl}
                     style={{ width: "100%", height: "300px", border: "none" }}

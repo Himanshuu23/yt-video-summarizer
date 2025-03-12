@@ -33,7 +33,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     const data = await response.json();
     setResponse(data.summary);
     setQuestions(data.questions)
-    setImageBuffer(`data:image/png;base64,${data.buffer}`)
+    setImageBuffer(data.buffer)
     setIsModalOpen(true);
   }
 
@@ -76,8 +76,10 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   }, [pdfTheme, response]);
 
   useEffect(() => {
-    translateSummary(selectedLanguage, response)
-    generatePdf(response, questions, imageBuffer)
+    if (response ) {
+      translateSummary(selectedLanguage, `${response + questions}`)
+      generatePdf(response, questions, imageBuffer)
+    }
   }, [selectedLanguage])
 
   return (

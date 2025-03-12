@@ -34,6 +34,7 @@ const generatePdf = (req, res) => {
         
         if (buffer) {
             const imgBuffer = Buffer.from(buffer, 'base64')
+            console.log(imgBuffer)
             doc.image(imgBuffer, { fit: [250, 250], align: 'center' })
         }
 
