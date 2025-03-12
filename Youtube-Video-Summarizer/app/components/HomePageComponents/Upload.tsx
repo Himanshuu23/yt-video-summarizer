@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
 import Summary from "../Summary";
@@ -46,30 +46,23 @@ export default function UploadComponent() {
         setQuestions(data.questions);
         setImageBuffer(`data:image/png;base64,${data.buffer}`)
         setIsSummaryVisible(true);
-        generatePdf(data.summary);
+        generatePdf(data.summary, questions, imageBuffer);
       } catch (error) {
         console.error("Error summarizing file:", error);
       }
     }
   }
 
-  async function generatePdf(summary: string) {
-    try {
-      const res = await fetch("http://localhost:8000/pdf", {
-        method: "POST",
-        body: JSON.stringify({ summary, theme: pdfTheme }),
-        headers: { "Content-Type": "application/json" },
-      });
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      setCachedPdfs((prev) => ({
-        ...prev,
-        [pdfTheme]: url,
-      }));
-      setPreviewPdfUrl(url);
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-    }
+  async function generatePdf(response: string, questions: string, buffer: string) {
+    const res = await fetch("http://localhost:8000/pdf", {
+      method: "POST",
+      body: JSON.stringify({ summary: response, theme: pdfTheme, questions: questions }),
+      headers: { "Content-type": "application/json" },
+    });
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
+    setPreviewPdfUrl(url);
   }
 
   const handleThemeChange = (theme: string) => {
@@ -77,9 +70,33 @@ export default function UploadComponent() {
     if (cachedPdfs[theme]) {
       setPreviewPdfUrl(cachedPdfs[theme]);
     } else if (response) {
-      generatePdf(response);
+      generatePdf(response, questions, imageBuffer);
     }
   };
+
+  async function translateSummary(language: string, text: string) {
+    const res = await fetch("http://localhost:8000/translate", {
+      method: "POST",
+      body: JSON.stringify({ text: text, lang: language }),
+      headers: { "Content-type": "application/json" },
+    });
+
+    const result = await res.json()
+    setResponse(result.translatedText)
+  }
+
+  useEffect(() => {
+      if (response && !cachedPdfs[pdfTheme]) {
+        generatePdf(response, questions, imageBuffer);
+      }
+    }, [pdfTheme, response]);
+
+    useEffect(() => {
+        if (response ) {
+          translateSummary(selectedLanguage, `${response + questions}`)
+          generatePdf(response, questions, imageBuffer)
+        }
+      }, [selectedLanguage])
 
   return (
     <div id="notes" className={`h-full w-full bg-black overflow-hidden flex mb-24 flex-col md:flex-row`}>
@@ -125,7 +142,7 @@ export default function UploadComponent() {
           </button>
         </div>
       </div>
-      <Summary
+      {response && <Summary
         isOpen={isSummaryVisible}
         closeModal={() => setIsSummaryVisible(false)}
         summary={response}
@@ -136,7 +153,7 @@ export default function UploadComponent() {
         selectedLanguage={selectedLanguage}
         setSelectedLanguage={setSelectedLanguage}
         generatePdf={generatePdf}
-      />
+      />}
     </div>
   );   
 }

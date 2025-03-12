@@ -40,7 +40,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   async function generatePdf(response: string, questions: string, buffer: string) {
     const res = await fetch("http://localhost:8000/pdf", {
       method: "POST",
-      body: JSON.stringify({ summary: response, theme: pdfTheme, questions: questions }),
+      body: JSON.stringify({ summary: response, theme: pdfTheme, questions: questions, buffer: buffer }),
       headers: { "Content-type": "application/json" },
     });
     const blob = await res.blob();

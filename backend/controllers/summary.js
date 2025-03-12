@@ -37,7 +37,6 @@ const summarizeVideo = async (req, res) => {
         const finalSummary = cleanHTMLentities(betterSummary);
         const questions = await generateQuestions(finalSummary);
         const buffer = await generateImage(finalSummary);
-        console.log("inside the summary.ys", buffer)
         res.json({ summary: finalSummary, questions: questions, buffer: buffer });
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -52,13 +51,12 @@ const summarizeText = async (req, res) => {
     try {
         const fileBuffer = req.file.buffer;
         const extractedText = await extractTextFromDocument(fileBuffer);
-        console.log("extracted text", extractedText)
         const summary = await summarizeTextInChunks(extractedText);
-        console.log("summary", summary)
         const cleanedSummary = cleanSummary(summary);
         const finalSummary = cleanHTMLentities(cleanedSummary);
-        console.log(finalSummary)
-        res.json({ summary: finalSummary });
+        const questions = await generateQuestions(finalSummary);
+        const buffer = await generateImage(finalSummary);
+        res.json({ summary: finalSummary, questions: questions, buffer: buffer });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }   
