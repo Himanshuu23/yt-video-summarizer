@@ -11,20 +11,21 @@ const poppins = Poppins({
 
 const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   const [url, setUrl] = useState("");
-  const [response, setResponse] = useState<string>("this is another thing for something for the same for swfoeifn eofnoewnhofwneofn fownheiofnoew fowenfiowneonfoiwe fownefoweowoeofw fwoneofnwo fwoenfow fowefow  wohiwo i  hwoowefoieof owefioweofhw wohfwiehoh weofhwoiehfow wohfoehwfiohw owfjnefo jeofeio eofioeif ");
+  const [response, setResponse] = useState<string>("");
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const [pdfTheme, setPdfTheme] = useState("default");
   const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
     default: null,
     dark: null,
   });
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("en")
-  const [questions, setQuestions] = useState<string>("these are the questions for the same thing?")
+  const [questions, setQuestions] = useState<string>("")
   const [imageBuffer, setImageBuffer] = useState<string>("")
 
   async function handleSubmit(e: any) {
     e.preventDefault();
+    setIsModalOpen(true);
     const response = await fetch("http://localhost:8000/summarize/url", {
       method: "POST",
       body: JSON.stringify({ videoUrl: JSON.stringify(url) }),
@@ -34,7 +35,6 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     setResponse(data.summary);
     setQuestions(data.questions)
     setImageBuffer(data.buffer)
-    setIsModalOpen(true);
   }
 
   async function generatePdf(response: string, questions: string, buffer: string) {
@@ -57,7 +57,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     });
 
     const result = await res.json()
-    setResponse(result.translatedText)
+    return result.translatedText
   }
 
   const handleThemeChange = (theme: string) => {
@@ -76,12 +76,16 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   }, [pdfTheme, response]);
 
   useEffect(() => {
-    if (response ) {
-      translate(selectedLanguage, response)
-      translate(selectedLanguage, questions)
-      generatePdf(response, questions, imageBuffer)
+    if (response) {
+      (async () => {
+        const translatedSummary = await translate(selectedLanguage, response);
+        const translatedQuestions = await translate(selectedLanguage, questions);
+        setResponse(translatedSummary);
+        setQuestions(translatedQuestions);
+        generatePdf(translatedSummary, translatedQuestions, imageBuffer);
+      })();
     }
-  }, [selectedLanguage])
+  }, [selectedLanguage, response]);  
 
   return (
     <div id="video" className="h-screen w-screen bg-black overflow-hidden flex my-16 flex-col md:flex-row">
@@ -123,7 +127,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
           className="object-contain max-h-full max-w-full"
         />
       </div>
-      {response && <Summary
+      {<Summary
         isOpen={isModalOpen}
         closeModal={() => setIsModalOpen(false)}
         summary={response}
