@@ -11,16 +11,16 @@ const poppins = Poppins({
 
 const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   const [url, setUrl] = useState("");
-  const [response, setResponse] = useState<string>(" ");
+  const [response, setResponse] = useState<string>("this is another thing for something for the same for swfoeifn eofnoewnhofwneofn fownheiofnoew fowenfiowneonfoiwe fownefoweowoeofw fwoneofnwo fwoenfow fowefow  wohiwo i  hwoowefoieof owefioweofhw wohfwiehoh weofhwoiehfow wohfoehwfiohw owfjnefo jeofeio eofioeif ");
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
   const [pdfTheme, setPdfTheme] = useState("default");
   const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
     default: null,
     dark: null,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [selectedLanguage, setSelectedLanguage] = useState("en")
-  const [questions, setQuestions] = useState<string>("")
+  const [questions, setQuestions] = useState<string>("these are the questions for the same thing?")
   const [imageBuffer, setImageBuffer] = useState<string>("")
 
   async function handleSubmit(e: any) {
@@ -49,7 +49,7 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     setPreviewPdfUrl(url);
   }
 
-  async function translateSummary(language: string, text: string) {
+  async function translate(language: string, text: string) {
     const res = await fetch("http://localhost:8000/translate", {
       method: "POST",
       body: JSON.stringify({ text: text, lang: language }),
@@ -77,7 +77,8 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
 
   useEffect(() => {
     if (response ) {
-      translateSummary(selectedLanguage, `${response + questions}`)
+      translate(selectedLanguage, response)
+      translate(selectedLanguage, questions)
       generatePdf(response, questions, imageBuffer)
     }
   }, [selectedLanguage])
