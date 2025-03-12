@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Poppins } from "next/font/google";
 import Summary from "../Summary";
 import { ThemeType } from "@/app/types/theme";
+import { toast } from "react-toastify";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,8 +23,9 @@ export default function UploadComponent() {
     dark: null,
   });
   const [selectedLanguage, setSelectedLanguage] = useState("en")
-    const [questions, setQuestions] = useState<string>("")
-    const [imageBuffer, setImageBuffer] = useState<string>("")
+  const [questions, setQuestions] = useState<string>("")
+  const [imageBuffer, setImageBuffer] = useState<string>("")
+  const [error, setError] = useState<string | null>(null);
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const uploadedFile = e.target.files?.[0];
@@ -32,7 +34,16 @@ export default function UploadComponent() {
     }
   }
 
-  async function handleSummarize() {
+  async function handleSummarize(e: any) {
+    e.preventDefault()
+
+    if (!file) {
+      handleError("Please Upload a File.")
+      return
+    }
+
+    setIsSummaryVisible(true)
+
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
@@ -47,22 +58,26 @@ export default function UploadComponent() {
         setImageBuffer(`data:image/png;base64,${data.buffer}`)
         setIsSummaryVisible(true);
         generatePdf(data.summary, questions, imageBuffer);
-      } catch (error) {
-        console.error("Error summarizing file:", error);
+      } catch (error: any) {
+        handleError(error.message)
       }
     }
   }
 
   async function generatePdf(response: string, questions: string, buffer: string) {
-    const res = await fetch("http://localhost:8000/pdf", {
-      method: "POST",
-      body: JSON.stringify({ summary: response, theme: pdfTheme, questions: questions, buffer: buffer }),
-      headers: { "Content-type": "application/json" },
-    });
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
-    setPreviewPdfUrl(url);
+    try {
+      const res = await fetch("http://localhost:8000/pdf", {
+        method: "POST",
+        body: JSON.stringify({ summary: response, theme: pdfTheme, questions: questions, buffer: buffer }),
+        headers: { "Content-type": "application/json" },
+      });
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
+      setPreviewPdfUrl(url);
+    } catch (error: any) {
+      handleError(error.message)
+    }
   }
 
   const handleThemeChange = (theme: string) => {
@@ -74,16 +89,36 @@ export default function UploadComponent() {
     }
   };
 
-  async function translateSummary(language: string, text: string) {
-    const res = await fetch("http://localhost:8000/translate", {
-      method: "POST",
-      body: JSON.stringify({ text: text, lang: language }),
-      headers: { "Content-type": "application/json" },
-    });
-
-    const result = await res.json()
-    setResponse(result.translatedText)
+  async function translate(language: string, text: string) {
+    try {
+      const res = await fetch("http://localhost:8000/translate", {
+        method: "POST",
+        body: JSON.stringify({ text, lang: language }),
+        headers: { "Content-type": "application/json" },
+      });
+  
+      if (!res.ok) throw new Error("Translation failed");
+  
+      const result = await res.json();
+      return result.translatedText;
+    } catch (err: any) {
+      handleError(err.message);
+      return text;
+    }
   }
+
+  const handleError = (message: string) => {
+      setError(message);
+      toast.error(message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+      });
+    };
 
   useEffect(() => {
       if (response && !cachedPdfs[pdfTheme]) {
@@ -92,11 +127,16 @@ export default function UploadComponent() {
     }, [pdfTheme, response]);
 
     useEffect(() => {
-        if (response ) {
-          translateSummary(selectedLanguage, `${response + questions}`)
-          generatePdf(response, questions, imageBuffer)
+        if (response) {
+          (async () => {
+            const translatedSummary = await translate(selectedLanguage, response);
+            const translatedQuestions = await translate(selectedLanguage, questions);
+            setResponse(translatedSummary);
+            setQuestions(translatedQuestions);
+            generatePdf(translatedSummary, translatedQuestions, imageBuffer);
+          })();
         }
-      }, [selectedLanguage])
+      }, [selectedLanguage, response]);  
 
   return (
     <div id="notes" className={`h-full w-full bg-black overflow-hidden flex mb-24 flex-col md:flex-row`}>
@@ -142,7 +182,7 @@ export default function UploadComponent() {
           </button>
         </div>
       </div>
-      {response && <Summary
+      {<Summary
         isOpen={isSummaryVisible}
         closeModal={() => setIsSummaryVisible(false)}
         summary={response}

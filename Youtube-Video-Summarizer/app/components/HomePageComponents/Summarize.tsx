@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Poppins } from "next/font/google";
 import Summary from "../Summary";
 import { ThemeType } from "@/app/types/theme";
+import { toast } from "react-toastify";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,42 +23,69 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   const [selectedLanguage, setSelectedLanguage] = useState("en")
   const [questions, setQuestions] = useState<string>("")
   const [imageBuffer, setImageBuffer] = useState<string>("")
+  const [error, setError] = useState<string | null>(null);
 
   async function handleSubmit(e: any) {
     e.preventDefault();
+    if (url === "" ) {
+      handleError("Please Enter a URL first.")
+      return
+    }
+
     setIsModalOpen(true);
-    const response = await fetch("http://localhost:8000/summarize/url", {
-      method: "POST",
-      body: JSON.stringify({ videoUrl: JSON.stringify(url) }),
-      headers: { "Content-type": "application/json" },
-    });
-    const data = await response.json();
-    setResponse(data.summary);
-    setQuestions(data.questions)
-    setImageBuffer(data.buffer)
+    try {
+      const response = await fetch("http://localhost:8000/summarize/url", {
+        method: "POST",
+        body: JSON.stringify({ videoUrl: JSON.stringify(url) }),
+        headers: { "Content-type": "application/json" },
+      });
+  
+      if (!response.ok) throw new Error("Failed to fetch summary");
+  
+      const data = await response.json();
+      setResponse(data.summary);
+      setQuestions(data.questions);
+      setImageBuffer(data.buffer);
+    } catch (err: any) {
+      handleError(err.message);
+    }
   }
 
   async function generatePdf(response: string, questions: string, buffer: string) {
-    const res = await fetch("http://localhost:8000/pdf", {
-      method: "POST",
-      body: JSON.stringify({ summary: response, theme: pdfTheme, questions: questions, buffer: buffer }),
-      headers: { "Content-type": "application/json" },
-    });
-    const blob = await res.blob();
-    const url = window.URL.createObjectURL(blob);
-    setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
-    setPreviewPdfUrl(url);
+    try {
+      const res = await fetch("http://localhost:8000/pdf", {
+        method: "POST",
+        body: JSON.stringify({ summary: response, theme: pdfTheme, questions, buffer }),
+        headers: { "Content-type": "application/json" },
+      });
+  
+      if (!res.ok) throw new Error("Failed to generate PDF");
+  
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
+      setPreviewPdfUrl(url);
+    } catch (err: any) {
+      handleError(err.message);
+    }
   }
 
   async function translate(language: string, text: string) {
-    const res = await fetch("http://localhost:8000/translate", {
-      method: "POST",
-      body: JSON.stringify({ text: text, lang: language }),
-      headers: { "Content-type": "application/json" },
-    });
-
-    const result = await res.json()
-    return result.translatedText
+    try {
+      const res = await fetch("http://localhost:8000/translate", {
+        method: "POST",
+        body: JSON.stringify({ text, lang: language }),
+        headers: { "Content-type": "application/json" },
+      });
+  
+      if (!res.ok) throw new Error("Translation failed");
+  
+      const result = await res.json();
+      return result.translatedText;
+    } catch (err: any) {
+      handleError(err.message);
+      return text;
+    }
   }
 
   const handleThemeChange = (theme: string) => {
@@ -67,6 +95,19 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
     } else if (response) {
       generatePdf(response, questions, imageBuffer);
     }
+  };
+
+  const handleError = (message: string) => {
+    setError(message);
+    toast.error(message, {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      theme: "dark",
+    });
   };
 
   useEffect(() => {
