@@ -1,4 +1,5 @@
 const  PDFDocument = require('pdfkit')
+const pako = require("pako")
 
 const generatePdf = (req, res) => {
         const { summary, theme, questions, buffer } = req.body;
@@ -31,12 +32,29 @@ const generatePdf = (req, res) => {
         doc.fontSize(16).fillColor(theme === 'dark' ? 'white' : 'black').text('YouTube Video Summary', { align: 'center' });
         doc.moveDown();
         doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text(summary);
+
+        if (buffer) {  // ✅ Directly check if buffer exists
+            try {
+                // Decompress and decode Base64 string
+                const decompressedBuffer = pako.inflate(Buffer.from(buffer, 'base64'), { to: 'string' });
         
-        if (buffer) {
-            const imgBuffer = Buffer.from(buffer, 'base64')
-            console.log(imgBuffer)
-            doc.image(imgBuffer, { fit: [250, 250], align: 'center' })
+                // Convert Base64 back to Buffer
+                const imageBuffer = Buffer.from(decompressedBuffer, 'base64');
+        
+                // Ensure valid image buffer
+                if (!imageBuffer || imageBuffer.length === 0) {
+                    throw new Error('Invalid image buffer after decoding.');
+                }
+        
+                // Add the image to the PDF
+                doc.image(imageBuffer, { fit: [250, 250], align: 'center' });
+        
+            } catch (err) {
+                console.error('Error processing image:', err.message);
+            }
         }
+        
+
 
         doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text('Questions & Answers', { align: 'center' });
         doc.moveDown();

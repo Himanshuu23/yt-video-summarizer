@@ -1,4 +1,5 @@
 const pdfParse = require('pdf-parse');
+const pako = require("pako")
 const fetchTranscript = require('../utils/transcript');
 const summarizeTextInChunks = require('../utils/summary');
 const { cleanSummary, cleanHTMLentities } = require('../utils/cleaner');
@@ -36,8 +37,10 @@ const summarizeVideo = async (req, res) => {
         const betterSummary = cleanSummary(summary);
         const finalSummary = cleanHTMLentities(betterSummary);
         const questions = await generateQuestions(finalSummary);
-        const buffer = await generateImage(finalSummary);
-        res.json({ summary: finalSummary, questions: questions, buffer: buffer });
+        const base64Image = await generateImage(finalSummary);
+        const compressedBase64 = Buffer.from(base64Image, 'base64').toString('base64');
+
+        res.json({ summary: finalSummary, questions: questions, buffer: Array.from(compressedBase64) });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
