@@ -26,3 +26,18 @@ export interface NavProps {
 export interface LoginModalProps {
     closeModal: () => void;
 }
+
+export interface SpeechProps {
+    summary: string;
+    questions: string;
+    selectedLanguage?: string;
+}
+
+export interface PdfOptionsProps {
+    summary: string;
+    questions: string;
+    imageBuffer: string;
+    pdfUrl: string | null;
+    generatePdf: (summary: string, questions: string, pdfUrl: string) => void;
+    handleThemeChange: (theme: string) => void;
+}
