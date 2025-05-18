@@ -1,3 +1,11 @@
+export interface HeroProps {
+    heading: string,
+    body: string,
+    subheading1: string,
+    subheading2: string,
+    bg: string,
+}
+
 export interface SummaryProps {
     isOpen: boolean;
     closeModal: () => void;
@@ -9,4 +17,8 @@ export interface SummaryProps {
     selectedLanguage: string;
     setSelectedLanguage: (lang: string) => void;
     generatePdf: (summary: string, questions: string, imageBuffer: string) => void;
+}
+
+export interface NavProps {
+    name: string
 }
