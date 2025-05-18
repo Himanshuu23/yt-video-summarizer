@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Poppins } from "next/font/google";
 import Summary from "../Summary";
-import { ThemeType } from "@/app/types/theme";
+import { ThemeType } from "@/app/type/theme";
 import { toast } from "react-toastify";
 
 const poppins = Poppins({
