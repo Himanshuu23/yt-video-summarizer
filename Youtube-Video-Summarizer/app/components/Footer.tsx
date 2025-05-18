@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="text-center space-y-6">
         <p className="text-sm">
           Need help? Email{' '}
-          <a href="mailto:hello@fireship.io" className="text-gray-400 hover:text-white underline">
+          <a href="mailto:sagarhimanshu472@gmail.com" className="text-gray-400 hover:text-white underline">
             sagarhimanshu472@gmail.com
           </a>
         </p>
