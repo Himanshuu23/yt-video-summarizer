@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { SummaryProps } from "../types/summary";
+import { SummaryProps } from "../types/props";
 import Loading from "./Loading";
 
 export default function Summary({

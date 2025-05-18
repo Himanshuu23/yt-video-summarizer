@@ -1,9 +1,9 @@
 export interface HeroProps {
-    heading: string,
-    body: string,
-    subheading1: string,
-    subheading2: string,
-    bg: string,
+    heading: string;
+    body: string;
+    subheading1: string;
+    subheading2: string;
+    bg: string;
 }
 
 export interface SummaryProps {
@@ -20,5 +20,9 @@ export interface SummaryProps {
 }
 
 export interface NavProps {
-    name: string
+    name: string;
+}
+
+export interface LoginModalProps {
+    closeModal: () => void;
 }
