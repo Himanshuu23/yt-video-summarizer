@@ -33,20 +33,16 @@ const generatePdf = (req, res) => {
         doc.moveDown();
         doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text(summary);
 
-        if (buffer) {  // ✅ Directly check if buffer exists
+        if (buffer) { 
             try {
-                // Decompress and decode Base64 string
                 const decompressedBuffer = pako.inflate(Buffer.from(buffer, 'base64'), { to: 'string' });
         
-                // Convert Base64 back to Buffer
                 const imageBuffer = Buffer.from(decompressedBuffer, 'base64');
         
-                // Ensure valid image buffer
                 if (!imageBuffer || imageBuffer.length === 0) {
                     throw new Error('Invalid image buffer after decoding.');
                 }
         
-                // Add the image to the PDF
                 doc.image(imageBuffer, { fit: [250, 250], align: 'center' });
         
             } catch (err) {
