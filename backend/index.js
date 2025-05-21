@@ -3,6 +3,7 @@ const cors = require('cors')
 const summaryRouter = require('./routes/summary.js')
 const pdfRouter = require('./routes/pdf.js')
 const translateRouter = require('./routes/translate.js')
+const userRouter = require('./routes/user.js')
 
 const app = express()
 
@@ -10,6 +11,7 @@ const PORT = 8000
 
 app.use(cors());
 app.use(express.json());
+app.use('/user', userRouter)
 app.use('/summarize', summaryRouter)
 app.use('/pdf', pdfRouter)
 app.use('/translate', translateRouter)

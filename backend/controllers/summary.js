@@ -1,10 +1,9 @@
 const pdfParse = require('pdf-parse');
-const pako = require("pako")
-const fetchTranscript = require('../utils/transcript');
-const summarizeTextInChunks = require('../utils/summary');
-const { cleanSummary, cleanHTMLentities } = require('../utils/cleaner');
-const { generateQuestions } = require('../utils/questions');
-const { generateImage } = require('../utils/image');
+const fetchTranscript = require('../lib/transcript');
+const summarizeTextInChunks = require('../lib/summary');
+const { cleanSummary, cleanHTMLentities } = require('../lib/cleaner');
+const { generateQuestions } = require('../lib/questions');
+const { generateImage } = require('../lib/image');
 
 const extractTextFromDocument = (fileBuffer) => {
     return new Promise((resolve, reject) => {
