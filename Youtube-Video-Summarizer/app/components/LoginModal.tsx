@@ -23,6 +23,7 @@ export default function LoginModal({ session, closeModal }: LoginModalProps) {
 
   useEffect(() => {
     if (session && session?.user?.email) {
+      closeModal()
       getUserData(session?.user?.email)
     }
   }, [session])
@@ -66,7 +67,7 @@ export default function LoginModal({ session, closeModal }: LoginModalProps) {
         {showSignUp ? (
           <SignIn email={email} password={password} setEmail={setEmail} setPassword={setPassword} setShowSignUp={setShowSignUp} session={session} />
         ) : (
-          <Login email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} setShowSignUp={setShowSignUp} session={session} />
+          <Login email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} setShowSignUp={setShowSignUp} session={session} closeModal={closeModal} />
         )}
       </div>
     </div>

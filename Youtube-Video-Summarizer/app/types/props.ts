@@ -67,6 +67,7 @@ export interface LoginProps {
     password: string;
     setPassword: (name: string) => void;
     session: Session | null;
+    closeModal: () => void;
 }
 
 export interface SignInProps {

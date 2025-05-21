@@ -2,7 +2,7 @@ import { LoginProps } from "../types/props";
 import GithubLogo from "./logos/Github";
 import GoogleLogo from "./logos/Google";
 
-export default function Login({ email, password, setEmail, setPassword, handleLogin, setShowSignUp, session }: LoginProps) {
+export default function Login({ email, password, setEmail, setPassword, handleLogin, setShowSignUp, session, closeModal }: LoginProps) {
   
   async function loginUser(email: string, password: string) {
     const res = await fetch(`http://localhost:8000/user?email=${email}&password=${password}`, {
@@ -11,6 +11,7 @@ export default function Login({ email, password, setEmail, setPassword, handleLo
 
     setEmail("");
     setPassword("");
+    closeModal();
 
     console.log(res);
   }
