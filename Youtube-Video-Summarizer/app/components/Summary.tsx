@@ -18,6 +18,9 @@ export default function Summary({
   selectedLanguage,
   setSelectedLanguage,
   generatePdf,
+  pdfTheme, 
+  setCachedPdfs, 
+  setPreviewPdfUrl
 }: SummaryProps) {
   
   const [languages, setLanguages] = useState({});
@@ -66,7 +69,7 @@ export default function Summary({
                 </select>
               </h2>
               <Text summary={summary} questions={questions} />
-              <PdfOptions summary={summary} questions={questions} imageBuffer={imageBuffer} pdfUrl={pdfUrl} generatePdf={generatePdf} handleThemeChange={handleThemeChange} />
+              <PdfOptions pdfTheme={pdfTheme} setCachedPdfs={setCachedPdfs} setPreviewPdfUrl={setPreviewPdfUrl} summary={summary} questions={questions} imageBuffer={imageBuffer} pdfUrl={pdfUrl} generatePdf={generatePdf} handleThemeChange={handleThemeChange} />
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import useTypingEffect from "../hooks/TypingAnimation";
+import useTypingEffect from "../hooks/useTypingAnimation";
 import { SpeechProps } from "../types/props";
 
 export default function Text({ summary, questions }: SpeechProps) {

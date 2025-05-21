@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { PdfOptionsProps } from "../types/props";
 
-export default function PdfOptions({ summary, questions, imageBuffer, pdfUrl, generatePdf, handleThemeChange }: PdfOptionsProps) {
+export default function PdfOptions({ summary, questions, imageBuffer, pdfUrl, generatePdf, handleThemeChange, pdfTheme, setCachedPdfs, setPreviewPdfUrl }: PdfOptionsProps) {
     const [isPdfVisible, setIsPdfVisible] = useState(false);
 
     const handlePdf = () => {
-        generatePdf(summary, questions, imageBuffer);
+        generatePdf(summary, questions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
         setIsPdfVisible(true);
     };
 

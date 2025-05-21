@@ -16,7 +16,10 @@ export interface SummaryProps {
     handleThemeChange: (theme: string) => void;
     selectedLanguage: string;
     setSelectedLanguage: (lang: string) => void;
-    generatePdf: (summary: string, questions: string, imageBuffer: string) => void;
+    generatePdf: (summary: string, questions: string, imageBuffer: string, pdfTheme: string, setCachedPdfs: any, setPreviewPdfUrl: any) => void;
+    pdfTheme: string; 
+    setCachedPdfs: any; 
+    setPreviewPdfUrl: any;
 }
 
 export interface NavProps {
@@ -38,6 +41,26 @@ export interface PdfOptionsProps {
     questions: string;
     imageBuffer: string;
     pdfUrl: string | null;
-    generatePdf: (summary: string, questions: string, pdfUrl: string) => void;
+    generatePdf: (summary: string, questions: string, imageBuffer: string, pdfTheme: string, setCachedPdfs: any, setPreviewPdfUrl: any) => void;
     handleThemeChange: (theme: string) => void;
+    pdfTheme: string; 
+    setCachedPdfs: any; 
+    setPreviewPdfUrl: any;
+}
+
+export interface LayoutProps {
+    title1: string;
+    title2: string;
+    subtitle: string;
+    imageUrl: string;
+    type: number;
+}
+
+export interface LoginProps {
+    handleLogin: (provider: string) => void;
+    setShowSignUp: (show: boolean) => void;
+}
+
+export interface SignInProps {
+    setShowSignUp: (show: boolean) => void;
 }

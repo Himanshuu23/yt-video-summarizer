@@ -1,6 +1,6 @@
 import React from "react";
 import { Poppins } from "next/font/google";
-import { HeroProps } from "@/app/types/hero";
+import { HeroProps } from "@/app/types/props";
 
 const poppins = Poppins({
   subsets: ['latin'],

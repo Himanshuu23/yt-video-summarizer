@@ -1,40 +1,66 @@
-'use client'
+"use client"
 
-import React from "react";
-import { signOut, useSession } from "next-auth/react"
 import { useState } from "react";
-import ReactDOM from "react-dom";
-import LoginModal from "./LoginModal";
+import { LoginProps } from "../types/props";
+import GithubLogo from "./logos/Github";
+import GoogleLogo from "./logos/Google";
 
-export default function Login() {
- const { data: session } = useSession();
- const [isOpen, setIsOpen] = useState(false);
+export default function Login({ handleLogin, setShowSignUp }: LoginProps) {
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  
+  async function loginUser(email: string, password: string) {
+    const res = await fetch("http://localhost:8000/user/login", {
+      method: "POST",
+      body: JSON.stringify({ email: email, password: password }),
+      headers: { "Content-type": "application/json" },
+    })
 
- const openModal = () => setIsOpen(true);
- const closeModal = () => setIsOpen(false);
+    console.log(res);
+  }
 
- if (session) {
-   return (
-     <div>
-       <button
-         className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"
-         onClick={() => signOut()}
-       >
-         Logout
-       </button>
-     </div>
-   );
- }
-
- return (
-   <div>
-     <button
-       onClick={openModal}
-       className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"
-     >
-       Login
-     </button>
-     {isOpen && ReactDOM.createPortal(<LoginModal closeModal={closeModal} />, document.body)}
-   </div>
- );
+    return (
+        <>
+                    <div className="text-white text-center mb-4 font-bold text-2xl">Login using</div>
+                    <div className="flex justify-center space-x-4 mb-4">
+                      <button onClick={() => handleLogin("google")} className="flex items-center justify-center w-12 h-12">
+                        <div className="transform scale-125">
+                          <GoogleLogo />
+                        </div>
+                      </button>
+                      <button onClick={() => handleLogin("github")} className="flex items-center justify-center w-12 h-12">
+                        <div className="transform scale-125">
+                          <GithubLogo />
+                        </div>
+                      </button>
+                    </div>
+                    <div className="text-white text-center mb-4">--------- OR ---------</div>
+                    <div className="flex flex-col space-y-3">
+                      <input
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        type="email"
+                        placeholder="Email"
+                        className="p-2 rounded bg-gray-800 text-white placeholder-gray-400"
+                      />
+                      <input
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        type="password"
+                        placeholder="Password"
+                        className="p-2 rounded bg-gray-800 text-white placeholder-gray-400"
+                      />
+                      <button className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
+                        Login
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => setShowSignUp(true)}
+                      className="text-white text-sm text-center mt-4"
+                    >
+                      Don’t have an account?{" "}
+                      <span className="underline cursor-pointer">Sign up</span>
+                    </button>
+                  </>
+    )
 }

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { Poppins } from "next/font/google";
-import Login from './Login';
+import Login from './LoginButton';
 import { NavProps } from '../types/props';
 
 const poppins = Poppins({
