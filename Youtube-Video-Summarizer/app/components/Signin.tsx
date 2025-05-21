@@ -1,19 +1,21 @@
 "use client"
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SignInProps } from "../types/props";
 
-export default function SignIn ({ setShowSignUp }: SignInProps) {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
+export default function SignIn ({ email, password, setEmail, setPassword, setShowSignUp, session }: SignInProps) {
   const [name, setName] = useState<string>("")
 
   async function signInUser(name: string, email: string, password: string) {
-    const res = await fetch("http://localhost:8000/user/signin", {
+    const res = await fetch("http://localhost:8000/user", {
       method: "POST",
       body: JSON.stringify({ name: name, email: email, password: password }),
       headers: { "Content-type": "application/json" },
     })
+    setShowSignUp(false);
+    setName("");
+    setEmail("");
+    setPassword("");
 
     console.log(res);
   }
@@ -25,6 +27,12 @@ export default function SignIn ({ setShowSignUp }: SignInProps) {
 
     console.log(response)
   }
+
+  useEffect(() => {
+  if (session?.user?.email && session?.user?.name) {
+    signInUser(session.user.name, session.user.email, "password");
+  }
+  }, [session]);
 
   return (
   <>
@@ -50,7 +58,7 @@ export default function SignIn ({ setShowSignUp }: SignInProps) {
         placeholder="Password"
         className="p-2 rounded bg-gray-800 text-white placeholder-gray-400"
       />
-      <button className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
+      <button onClick={() => signInUser(name, email, password)} className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
         Sign Up
       </button>
     </div>

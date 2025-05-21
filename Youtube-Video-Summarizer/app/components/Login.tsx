@@ -1,32 +1,28 @@
-"use client"
-
-import { useState } from "react";
 import { LoginProps } from "../types/props";
 import GithubLogo from "./logos/Github";
 import GoogleLogo from "./logos/Google";
 
-export default function Login({ handleLogin, setShowSignUp }: LoginProps) {
-  const [email, setEmail] = useState<string>("")
-  const [password, setPassword] = useState<string>("")
+export default function Login({ email, password, setEmail, setPassword, handleLogin, setShowSignUp, session }: LoginProps) {
   
   async function loginUser(email: string, password: string) {
-    const res = await fetch("http://localhost:8000/user/login", {
-      method: "POST",
-      body: JSON.stringify({ email: email, password: password }),
-      headers: { "Content-type": "application/json" },
+    const res = await fetch(`http://localhost:8000/user?email=${email}&password=${password}`, {
+      method: "GET",
     })
+
+    setEmail("");
+    setPassword("");
 
     console.log(res);
   }
 
     return (
         <>
-                    <div className="text-white text-center mb-4 font-bold text-2xl">Login using</div>
-                    <div className="flex justify-center space-x-4 mb-4">
-                      <button onClick={() => handleLogin("google")} className="flex items-center justify-center w-12 h-12">
-                        <div className="transform scale-125">
-                          <GoogleLogo />
-                        </div>
+          <div className="text-white text-center mb-4 font-bold text-2xl">Login using</div>
+            <div className="flex justify-center space-x-4 mb-4">
+              <button onClick={() => handleLogin("google")} className="flex items-center justify-center w-12 h-12">
+              <div className="transform scale-125">
+                <GoogleLogo />
+              </div>
                       </button>
                       <button onClick={() => handleLogin("github")} className="flex items-center justify-center w-12 h-12">
                         <div className="transform scale-125">
@@ -50,7 +46,7 @@ export default function Login({ handleLogin, setShowSignUp }: LoginProps) {
                         placeholder="Password"
                         className="p-2 rounded bg-gray-800 text-white placeholder-gray-400"
                       />
-                      <button className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
+                      <button onClick={() => loginUser(email, password)} className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
                         Login
                       </button>
                     </div>

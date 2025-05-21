@@ -46,7 +46,7 @@ async function updateUserRole(req, res) {
     const { email, role } = req.body;
     
     try {
-        return res.send(JSON.stringify(await prisma.update({
+        return res.send(JSON.stringify(await prisma.user.update({
             where: {
                 email
             }, data: {
@@ -59,23 +59,44 @@ async function updateUserRole(req, res) {
 }
 
 async function updateUserToken(req, res) {
-    const { email, amount } = req.body
+  const { email, amount } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({ 
+        where: { 
+            email 
+        } 
+    });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const updated = await prisma.user.update({
+      where: { email },
+      data: { token: user.token + amount }
+    });
+    return res.json(updated);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+}
+
+async function getUserByEmail(req, res) {
+    const { email } = req.query.email;
 
     try {
-        return res.send(JSON.stringify(await prisma.update({
+        res.send(JSON.stringify(await prisma.user.findUnique({
             where: {
                 email
-            }, data: {
-                token: token + amount
             }
         })))
     } catch (error) {
-        return res.send(JSON.stringify({ error: error }))
+        res.error(error)
     }
 }
 
 module.exports = {
     signin,
     login,
-    updateUserRole
+    updateUserRole,
+    updateUserToken,
+    getUserByEmail
 }

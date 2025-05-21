@@ -1,3 +1,5 @@
+import { Session } from "next-auth";
+
 export interface HeroProps {
     heading: string;
     body: string;
@@ -28,6 +30,7 @@ export interface NavProps {
 
 export interface LoginModalProps {
     closeModal: () => void;
+    session: Session | null;
 }
 
 export interface SpeechProps {
@@ -59,8 +62,18 @@ export interface LayoutProps {
 export interface LoginProps {
     handleLogin: (provider: string) => void;
     setShowSignUp: (show: boolean) => void;
+    email: string;
+    setEmail: (email: string) => void;
+    password: string;
+    setPassword: (name: string) => void;
+    session: Session | null;
 }
 
 export interface SignInProps {
     setShowSignUp: (show: boolean) => void;
+    email: string;
+    setEmail: (email: string) => void;
+    password: string;
+    setPassword: (name: string) => void;
+    session: Session | null;
 }

@@ -34,7 +34,7 @@ export default function LoginButton() {
      >
        Login
      </button>
-     {isOpen && ReactDOM.createPortal(<LoginModal closeModal={closeModal} />, document.body)}
+     {isOpen && ReactDOM.createPortal(<LoginModal session={session} closeModal={closeModal} />, document.body)}
    </div>
  );
 }
