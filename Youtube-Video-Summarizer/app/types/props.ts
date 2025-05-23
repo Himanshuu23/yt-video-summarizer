@@ -1,4 +1,5 @@
 import { Session } from "next-auth";
+import { ThemeType } from "./theme";
 
 export interface HeroProps {
     heading: string;
@@ -13,15 +14,15 @@ export interface SummaryProps {
     closeModal: () => void;
     summary: string;
     questions: string;
-    imageBuffer: string;
+    imageBuffer?: string;
     pdfUrl: string | null;
     handleThemeChange: (theme: string) => void;
     selectedLanguage: string;
     setSelectedLanguage: (lang: string) => void;
     generatePdf: (summary: string, questions: string, imageBuffer: string, pdfTheme: string, setCachedPdfs: any, setPreviewPdfUrl: any) => void;
-    pdfTheme: string; 
-    setCachedPdfs: any; 
-    setPreviewPdfUrl: any;
+    pdfTheme: string;
+    setCachedPdfs: (pdfs: ThemeType) => void;
+    setPreviewPdfUrl: (url: string) => void;
 }
 
 export interface NavProps {
@@ -42,7 +43,7 @@ export interface SpeechProps {
 export interface PdfOptionsProps {
     summary: string;
     questions: string;
-    imageBuffer: string;
+    imageBuffer?: string;
     pdfUrl: string | null;
     generatePdf: (summary: string, questions: string, imageBuffer: string, pdfTheme: string, setCachedPdfs: any, setPreviewPdfUrl: any) => void;
     handleThemeChange: (theme: string) => void;
@@ -57,6 +58,17 @@ export interface LayoutProps {
     subtitle: string;
     imageUrl: string;
     type: number;
+    response: string;
+    questions: string;
+    imageBuffer: string;
+    url: string | File | null;
+    setQuestions: (questions: string) => void;
+    setResponse: (response: string) => void;
+    setUrl: (url: any) => void; 
+    handleSubmit: (e: any) => void;
+    isModalOpen: boolean;
+    setIsModalOpen: (currentState: boolean) => void;
+    errorMessage: string;
 }
 
 export interface LoginProps {

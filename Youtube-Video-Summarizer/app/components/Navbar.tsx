@@ -17,6 +17,7 @@ export default function Navbar({ name }: NavProps) {
                 <Link href="/" className={`text-white text-2xl text-gray-300 font-bold`}>{name}</Link>
             </div>
             <div className="flex gap-4">
+                <div className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"><span  className="inline-block w-4 h-4 bg-contain bg-no-repeat mr-2 pt-2" style={{ backgroundImage: 'url("/Token.png")' }}></span>123</div>
                 <Link href="/pro" className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50">Pro</Link>
                 <Login />
             </div>

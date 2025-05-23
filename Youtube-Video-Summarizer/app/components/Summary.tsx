@@ -19,7 +19,7 @@ export default function Summary({
   setSelectedLanguage,
   generatePdf,
   pdfTheme, 
-  setCachedPdfs, 
+  setCachedPdfs,
   setPreviewPdfUrl
 }: SummaryProps) {
   

@@ -8,7 +8,7 @@ const poppins = Poppins({
 
 export default function Footer() {
   return (
-    <footer className={`${poppins.className} bg-black text-gray-400 py-8 mt-32`}>
+    <footer className={`${poppins.className} bg-black text-gray-400 py-8 mt-48`}>
       <div className="text-center space-y-6">
         <p className="text-sm">
           Need help? Email{' '}

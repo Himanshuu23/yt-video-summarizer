@@ -9,7 +9,7 @@ const poppins = Poppins({
 
 export default function Hero({ heading, body, subheading1, subheading2, bg }: HeroProps) {
     return (
-        <section className={`${poppins.className} relative h-screen overflow-x-hidden flex items-center justify-center text-center text-white`}>
+        <section className={`${poppins.className} mb-48 relative h-screen overflow-x-hidden flex items-center justify-center text-center text-white`}>
           <div className="absolute inset-0">
             <video
               src={bg}

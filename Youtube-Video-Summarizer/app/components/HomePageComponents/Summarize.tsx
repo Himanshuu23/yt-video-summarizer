@@ -1,11 +1,6 @@
 import React, { forwardRef, useState, useEffect } from "react";
-import Image from "next/image";
 import { Poppins } from "next/font/google";
-import Summary from "../Summary";
-import { ThemeType } from "@/app/types/theme";
-import { handleError } from "@/app/libs/handleError";
-import { translate } from "@/app/libs/translateText";
-import { generatePdf } from "@/app/libs/generatePdf";
+import Layout from "../Layout";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -13,23 +8,17 @@ const poppins = Poppins({
 });
 
 const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
-  const [url, setUrl] = useState("");
-  const [response, setResponse] = useState<string>("");
-  const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
-  const [pdfTheme, setPdfTheme] = useState("default");
-  const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
-    default: null,
-    dark: null,
-  });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("en")
+  const [response, setResponse] = useState<string>("this is the summary for the response for the same and something");
   const [questions, setQuestions] = useState<string>("")
   const [imageBuffer, setImageBuffer] = useState<string>("")
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
   async function handleSubmit(e: any) {
     e.preventDefault();
     if (url === "" ) {
-      handleError("Please Enter a URL first.")
+      setError("Please Enter a URL first.")
       return
     }
 
@@ -48,30 +37,12 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
       setQuestions(data.questions);
       setImageBuffer(data.buffer);
     } catch (err: any) {
-      handleError(err.message);
+      setError(err.message);
     }
   }
 
-  useEffect(() => {
-    if (response && !cachedPdfs[pdfTheme]) {
-      generatePdf(response, questions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
-    }
-  }, [pdfTheme, response]);
-
-  useEffect(() => {
-    if (response) {
-      (async () => {
-        const translatedSummary = await translate(selectedLanguage, response);
-        const translatedQuestions = await translate(selectedLanguage, questions);
-        setResponse(translatedSummary);
-        setQuestions(translatedQuestions);
-        generatePdf(translatedSummary, translatedQuestions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
-      })();
-    }
-  }, [selectedLanguage, response]);  
-
   return (
-    null
+    <Layout title1="Youtube Video Summaries" title2="in a Flash" subtitle="Generating notes in multiple themes to download in PDF format, available in multiple languages, and generating related questions for a deeper understanding." imageUrl="/hero-1.png" response={response} questions={questions} imageBuffer={imageBuffer} url={url} setQuestions={setQuestions} setResponse={setResponse} setUrl={setUrl} handleSubmit={handleSubmit} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} type={1} errorMessage={error} />
   );  
 });
 

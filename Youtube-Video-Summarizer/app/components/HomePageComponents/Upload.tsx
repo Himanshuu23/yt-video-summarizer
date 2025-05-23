@@ -1,11 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React, { useState } from "react";
 import { Poppins } from "next/font/google";
-import Summary from "../Summary";
-import { ThemeType } from "@/app/types/theme";
-import { toast } from "react-toastify";
+import Layout from "../Layout";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -13,40 +10,33 @@ const poppins = Poppins({
 });
 
 export default function UploadComponent() {
-  const [isSummaryVisible, setIsSummaryVisible] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [url, setUrl] = useState<File | null>(null);
   const [response, setResponse] = useState<string>("");
-  const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
-  const [pdfTheme, setPdfTheme] = useState("default");
-  const [cachedPdfs, setCachedPdfs] = useState<ThemeType>({
-    default: null,
-    dark: null,
-  });
-  const [selectedLanguage, setSelectedLanguage] = useState("en")
   const [questions, setQuestions] = useState<string>("")
   const [imageBuffer, setImageBuffer] = useState<string>("")
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string>("");
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const uploadedFile = e.target.files?.[0];
     if (uploadedFile) {
-      setFile(uploadedFile);
+      setUrl(uploadedFile);
     }
   }
 
-  async function handleSummarize(e: any) {
+  async function handleSubmit(e: any) {
     e.preventDefault()
 
-    if (!file) {
-      handleError("Please Upload a File.")
+    if (!url) {
+      setError("Please Upload a File.")
       return
     }
 
-    setIsSummaryVisible(true)
+    setIsModalOpen(true)
 
-    if (file) {
+    if (url) {
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", url);
       try {
         const res = await fetch("http://localhost:8000/summarize/file", {
           method: "POST",
@@ -56,90 +46,21 @@ export default function UploadComponent() {
         setResponse(data.summary);
         setQuestions(data.questions);
         setImageBuffer(`data:image/png;base64,${data.buffer}`)
-        setIsSummaryVisible(true);
-        generatePdf(data.summary, questions, imageBuffer);
+        setIsModalOpen(true);
       } catch (error: any) {
-        handleError(error.message)
+        setError(error.message)
       }
     }
   }
-
-  async function generatePdf(response: string, questions: string, buffer: string) {
-    try {
-      const res = await fetch("http://localhost:8000/pdf", {
-        method: "POST",
-        body: JSON.stringify({ summary: response, theme: pdfTheme, questions: questions, buffer: buffer }),
-        headers: { "Content-type": "application/json" },
-      });
-      const blob = await res.blob();
-      const url = window.URL.createObjectURL(blob);
-      setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
-      setPreviewPdfUrl(url);
-    } catch (error: any) {
-      handleError(error.message)
-    }
-  }
-
-  const handleThemeChange = (theme: string) => {
-    setPdfTheme(theme);
-    if (cachedPdfs[theme]) {
-      setPreviewPdfUrl(cachedPdfs[theme]);
-    } else if (response) {
-      generatePdf(response, questions, imageBuffer);
-    }
-  };
-
-  async function translate(language: string, text: string) {
-    try {
-      const res = await fetch("http://localhost:8000/translate", {
-        method: "POST",
-        body: JSON.stringify({ text, lang: language }),
-        headers: { "Content-type": "application/json" },
-      });
-  
-      if (!res.ok) throw new Error("Translation failed");
-  
-      const result = await res.json();
-      return result.translatedText;
-    } catch (err: any) {
-      handleError(err.message);
-      return text;
-    }
-  }
-
-  const handleError = (message: string) => {
-      setError(message);
-      toast.error(message, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "dark",
-      });
-    };
-
-  useEffect(() => {
-      if (response && !cachedPdfs[pdfTheme]) {
-        generatePdf(response, questions, imageBuffer);
-      }
-    }, [pdfTheme, response]);
-
-    useEffect(() => {
-        if (response) {
-          (async () => {
-            const translatedSummary = await translate(selectedLanguage, response);
-            const translatedQuestions = await translate(selectedLanguage, questions);
-            setResponse(translatedSummary);
-            setQuestions(translatedQuestions);
-            generatePdf(translatedSummary, translatedQuestions, imageBuffer);
-          })();
-        }
-      }, [selectedLanguage, response]);  
 
   return (
-    <div id="notes" className={`h-full w-full bg-black overflow-hidden flex mb-24 flex-col md:flex-row`}>
+    <Layout title1="Making Long Notes Short" title2="Light Work" subtitle="Upload your document or book to receive summarized notes highlighting key points, available in multiple formats, and complemented with related questions to enhance understanding and retention." imageUrl="/hero-2.png" response={response} questions={questions} imageBuffer={imageBuffer} url={url} setQuestions={setQuestions} setResponse={setResponse} setUrl={setUrl} handleSubmit={handleSubmit} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} type={2} errorMessage={error} />
+  );   
+}
+
+/*
+
+<div id="notes" className={`h-full w-full bg-black overflow-hidden flex mb-24 flex-col md:flex-row`}>
       <div className="w-full md:w-2/5 mt-8 ml-8 mr-24 flex items-center justify-center relative">
         {!isSummaryVisible && (
           <Image
@@ -193,7 +114,11 @@ export default function UploadComponent() {
         selectedLanguage={selectedLanguage}
         setSelectedLanguage={setSelectedLanguage}
         generatePdf={generatePdf}
+        pdfTheme={pdfTheme}
+        setCachedPdfs={setCachedPdfs}
+        setPreviewPdfUrl={setPreviewPdfUrl}
       />}
     </div>
-  );   
-}
+
+
+          */
