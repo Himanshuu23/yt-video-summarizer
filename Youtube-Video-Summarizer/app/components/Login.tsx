@@ -1,5 +1,6 @@
 import { setCookie } from "../libs/cookie";
 import { LoginProps } from "../types/props";
+import Email from "./EmailInput";
 import GithubLogo from "./logos/Github";
 import GoogleLogo from "./logos/Google";
 
@@ -14,13 +15,12 @@ export default function Login({ email, password, setEmail, setPassword, handleLo
     setIsLoggedIn(true)
 
     {result && setUserData({
-      name: result.name,
-      email: result.email,
-      token: result.token,
-      role: result.role,
+      name: result.user.name,
+      email: result.user.email,
+      token: result.user.token,
+      role: result.user.role,
     })}
-
-    setCookie("user", JSON.stringify({ name: result.name, email: result.email, token: result.token, role: result.token }))
+    setCookie("user", JSON.stringify({ name: result.user.name, email: result.user.email, token: result.user.token, role: result.user.role }))
 
     if (result && !result.error) {
       setEmail("");
@@ -46,13 +46,7 @@ export default function Login({ email, password, setEmail, setPassword, handleLo
                     </div>
                     <div className="text-white text-center mb-4">--------- OR ---------</div>
                     <div className="flex flex-col space-y-3">
-                      <input
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        type="email"
-                        placeholder="Email"
-                        className="p-2 rounded bg-gray-800 text-white placeholder-gray-400"
-                      />
+                      <Email value={email} onChange={(e) => setEmail(e.target.value)} />
                       <input
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}

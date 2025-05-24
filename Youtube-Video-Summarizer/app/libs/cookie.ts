@@ -1,16 +1,13 @@
-"use server"
+import Cookies from 'js-cookie';
 
-import { cookies } from 'next/headers';
-
-export async function setCookie(name: string, value: string) {
-  cookies().set(name, value, {
-    httpOnly: true,
+export function setCookie(name: string, value: string) {
+  Cookies.set(name, value, {
     secure: true,
     sameSite: 'strict',
-    path: '/',  
-});
+    path: '/',
+  });
 }
 
-export async function getCookie(name: string) {
-  return cookies().get(name)?.value;
+export function getCookie(name: string) {
+  return Cookies.get(name);
 }

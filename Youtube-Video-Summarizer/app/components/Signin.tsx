@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { SignInProps } from "../types/props";
+import Password from "./PasswordInput";
+import Email from "./EmailInput";
 
 export default function SignIn ({ email, password, setEmail, setPassword, setShowSignUp, session }: SignInProps) {
   const [name, setName] = useState<string>("")
@@ -29,6 +31,7 @@ export default function SignIn ({ email, password, setEmail, setPassword, setSho
   return (
   <>
     <div className="flex flex-col space-y-3 mt-6">
+      <div className="text-white text-center mb-4 font-bold text-2xl">Sign In</div>
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -36,20 +39,8 @@ export default function SignIn ({ email, password, setEmail, setPassword, setSho
         placeholder="Full Name"
         className="p-2 rounded bg-gray-800 text-white placeholder-gray-400"
       />
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        type="email"
-        placeholder="Email"
-        className="p-2 rounded bg-gray-800 text-white placeholder-gray-400"
-      />
-      <input
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        type="password"
-        placeholder="Password"
-        className="p-2 rounded bg-gray-800 text-white placeholder-gray-400"
-      />
+      <Email value={email} onChange={(e) => setEmail(e.target.value)} />
+      <Password value={password} onChange={(e) => setPassword(e.target.value)} />
       <button onClick={() => signInUser(name, email, password)} className="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
         Sign Up
       </button>

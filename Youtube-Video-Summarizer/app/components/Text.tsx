@@ -21,7 +21,7 @@ export default function Text({ summary, questions }: SpeechProps) {
                   <span className="ml-1 inline-block w-2 h-2 bg-white rounded-full animate-blink"></span>
                 )}
               </p>
-              <h2>Questions & Answers</h2>
+              {questions && <h2>Questions & Answers</h2>}
               <p className="text-sm leading-relaxed">
                 {typedQuestions}
                 {cursorVisibleQ && questions && (

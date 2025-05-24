@@ -21,13 +21,13 @@ export default function LoginModal({ session, closeModal, setIsLoggedIn, setUser
 
     const result = await response.json();
     {result && setUserData({
-      name: result.name,
-      email: result.email,
-      token: result.token,
-      role: result.role,
+      name: result.user.name,
+      email: result.user.email,
+      token: result.user.token,
+      role: result.user.role,
     })}
 
-    setCookie("user", JSON.stringify({ name: result.name, email: result.email, token: result.token, role: result.token }))
+    setCookie("user", JSON.stringify({ name: result.user.name, email: result.user.email, token: result.user.token, role: result.user.role }))
     
     console.log(response);
   }
@@ -39,23 +39,13 @@ export default function LoginModal({ session, closeModal, setIsLoggedIn, setUser
     }
   }, [session])
 
-  async function updateUserRole(email: string, role: string) {
-    const response = await fetch("http://localhost:8000/role", {
-      method: "PATCH",
-      body: JSON.stringify({ email: email, role: role }),
-      headers: { "Application-Type": "application/json" }
-    })
-
-    console.log(response);
-  }
-
   return (
     <div
-      className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50"
+      className="fixed inset-0 backdrop-blur-md bg-black/35 bg-opacity-50 flex justify-center items-center z-50"
       onClick={closeModal}
     >
       <div
-        className="relative bg-black p-8 rounded-xl w-[80vw] sm:w-[400px]"
+        className="relative backdrop-blur-md bg-black p-8 rounded-xl w-[80vw] sm:w-[400px]"
         onClick={(e) => e.stopPropagation()}
       >
         <button

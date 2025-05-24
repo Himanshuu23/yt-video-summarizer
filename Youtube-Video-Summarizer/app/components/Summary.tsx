@@ -33,7 +33,7 @@ export default function Summary({
 
   return (
     isOpen ? (
-      summary && summary.length >= 5 ? (
+      summary ? (
         <div
           className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50"
           onClick={closeModal}

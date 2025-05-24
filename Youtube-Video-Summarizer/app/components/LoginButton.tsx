@@ -8,28 +8,30 @@ import LoginModal from "./LoginModal";
 import Profile from "./Profile";
 
 export default function LoginButton({ userData, setUserData }: { userData: any, setUserData: any }) {
- const { data: session } = useSession();
+ const { data: session, status } = useSession();
  const [isOpen, setIsOpen] = useState(false);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
  const openModal = () => setIsOpen(true);
  const closeModal = () => setIsOpen(false);
 
- if (session || isLoggedIn) {
+ if ((status === "authenticated") || isLoggedIn) {
    return (
-     <Profile session={session} setIsLoggedIn={setIsLoggedIn} userData={userData} />
+     <Profile session={session} setIsLoggedIn={setIsLoggedIn} userData={userData} isLoggedIn={isLoggedIn} />
    );
  }
 
- return (
-   <div>
-     <button
-       onClick={openModal}
-       className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"
-     >
-       Login
-     </button>
-     {isOpen && ReactDOM.createPortal(<LoginModal session={session} closeModal={closeModal} setIsLoggedIn={setIsLoggedIn} setUserData={setUserData} />, document.body)}
-   </div>
- );
+  if (!session || !isLoggedIn) { 
+    return (
+      <div>
+          <button
+          onClick={openModal}
+          className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"
+          >
+          Login
+        </button>
+        {isOpen && ReactDOM.createPortal(<LoginModal session={session} closeModal={closeModal} setIsLoggedIn={setIsLoggedIn} setUserData={setUserData} />, document.body)}
+      </div>
+    )
+  }
 }

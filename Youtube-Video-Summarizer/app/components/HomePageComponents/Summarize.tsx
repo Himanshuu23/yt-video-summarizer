@@ -1,7 +1,9 @@
-import React, { forwardRef, useState, useEffect } from "react";
+import React, { forwardRef, useState } from "react";
 import { Poppins } from "next/font/google";
 import Layout from "../Layout";
 import { getCookie, setCookie } from "@/app/libs/cookie";
+import { calculateTokenCost, updateUserTokens } from "@/app/libs/handleToken";
+import { translate } from "@/app/libs/translateText";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -18,13 +20,19 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
 
   async function handleSubmit(e: any) {
+    const cookie = getCookie("user");
+    const user = cookie ? JSON.parse(cookie) : null;
+
+    if (!user) {
+      setError("Please log in to summarize");
+      return;
+    }
+
     e.preventDefault();
     if (url === "" ) {
       setError("Please Enter a URL first.")
       return
     }
-
-    const user = JSON.parse(await getCookie("user") || "")
 
     try {
       const response = await fetch("http://localhost:8000/summarize/url", {
@@ -37,18 +45,16 @@ const Summarize = forwardRef<HTMLDivElement>((props, ref) => {
   
       const data = await response.json();
 
-      const email = user.email
-
+      setIsModalOpen(true);
+      setResponse(data.response);
+      setQuestions(data.questions);
+      setImageBuffer(data.buffer);
+      const email = await user.email
       const totalCost: number = calculateTokenCost(selectedFeatures) || 0
       const newResponse = await updateUserTokens(email, (-1* totalCost));
       const newResult = await newResponse.json()
 
       setCookie("user", JSON.stringify({ name: newResult.name, email: newResult.email, token: newResult.token, role: newResult.role }))
-
-      setIsModalOpen(true);
-      setResponse(data.summary);
-      setQuestions(data.questions);
-      setImageBuffer(data.buffer);
     } catch (err: any) {
       setError(err.message);
     }

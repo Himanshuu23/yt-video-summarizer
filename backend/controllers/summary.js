@@ -16,7 +16,9 @@ const extractTextFromDocument = (fileBuffer) => {
 const summarizeVideo = async (req, res) => {
     const { videoUrl, features, role } = req.body;
 
-    console.log(features)
+    if (role && role.length < 3) {
+        return res.error(401).json({ error: "Login In to summarize" })
+    }
 
     if (!videoUrl) {
         return res.status(400).json({ error: 'YouTube video URL is required.' });
@@ -44,8 +46,7 @@ const summarizeVideo = async (req, res) => {
             const base64Image = await generateImage(finalSummary);
             compressedBase64 = Buffer.from(base64Image, 'base64').toString('base64');
         }
-
-        res.json({ summary: finalSummary, questions: questions, buffer: Array.from(compressedBase64) });
+        res.json({ summary: finalSummary, questions: questions, buffer: compressedBase64 ? Array.from(compressedBase64) : null });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

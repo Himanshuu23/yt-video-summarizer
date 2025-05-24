@@ -5,13 +5,14 @@ import { signOut } from "next-auth/react"
 import { Session } from "next-auth"
 import { createPortal } from "react-dom"
 import { Poppins } from "next/font/google"
+import { capitalizeWords } from "../libs/text"
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '700']
 });
 
-export default function Profile({ session, setIsLoggedIn, userData }: { session: Session | null, setIsLoggedIn: (isLoggedIn: boolean) => void, userData: any }) {
+export default function Profile({ session, setIsLoggedIn, userData, isLoggedIn }: { session: Session | null, setIsLoggedIn: (isLoggedIn: boolean) => void, userData: any, isLoggedIn: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const buttonRef = useRef<HTMLDivElement>(null)
@@ -33,25 +34,24 @@ export default function Profile({ session, setIsLoggedIn, userData }: { session:
   }
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false)
-      }
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      buttonRef.current &&
+      !buttonRef.current.contains(event.target as Node)
+    ) {
+      setIsOpen(false);
     }
+  };
 
-    if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside)
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
+  if (isOpen) {
+    document.addEventListener("click", handleClickOutside);
+  }
 
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [isOpen])
+  return () => document.removeEventListener("click", handleClickOutside);
+}, [isOpen]);
 
-  return (
+  if (isLoggedIn) {
+    return (
     <>
       <div
   ref={buttonRef}
@@ -77,8 +77,8 @@ export default function Profile({ session, setIsLoggedIn, userData }: { session:
               position: "absolute",
             }}
           >
-            <p className="text-sm mb-1">{userData.name}</p>
-            <p className="text-sm text-gray-300 mx-2 mb-3"><b>Current Plan</b> Premium</p>
+            <p className="text-sm mx-2 mb-1">{capitalizeWords(userData.name)}</p>
+            <p className="text-sm text-gray-300 mx-2 mb-3"><b>Current Plan</b> {capitalizeWords(userData.role)}</p>
             <button
               onClick={() => handleLogout()}
               className="text-white text-xs px-2 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"
@@ -90,4 +90,5 @@ export default function Profile({ session, setIsLoggedIn, userData }: { session:
         )}
     </>
   )
+  }
 }

@@ -63,11 +63,11 @@ async function updateUserRole(req, res) {
 
 async function updateUserToken(req, res) {
   const { email, amount } = req.body;
-
+    console.log(email, amount)
   try {
     const user = await prisma.user.findUnique({ 
         where: { 
-            email 
+            email
         } 
     });
     if (!user) return res.status(404).json({ error: "User not found" });

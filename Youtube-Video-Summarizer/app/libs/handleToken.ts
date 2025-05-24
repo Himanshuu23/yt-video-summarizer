@@ -5,7 +5,7 @@ const FEATURES = new Map([
     ["Generate Pdf", 35 ],
 ])
 
-function calculateTokenCost(features: string[]) {
+export function calculateTokenCost(features: string[]) {
     let cost = 0;
     
     for (const feature of features) {
@@ -15,17 +15,12 @@ function calculateTokenCost(features: string[]) {
     return cost
 }
 
-async function updateUserTokens(email: string, amount: number) {
-    const response = await fetch("http://localhost:8000/token", {
+export async function updateUserTokens(email: string, amount: number) {
+    const response = await fetch("http://localhost:8000/user/token", {
       method: "PATCH",
       body: JSON.stringify({ email: email, amount: amount }),
-      headers: { "Application-Type": "application/json" }
+      headers: { "Content-Type": "application/json" }
     })
 
     return response
-}
-
-module.exports = {
-    calculateTokenCost,
-    updateUserTokens,
 }

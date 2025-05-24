@@ -6,6 +6,7 @@ import Login from './LoginButton';
 import { NavProps } from '../types/props';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../libs/cookie';
+import { handleError } from '../libs/handleError';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -13,17 +14,19 @@ const poppins = Poppins({
 });
 
 export default function Navbar({ name }: NavProps) {
-    const [userData, setUserData] = useState<any>({ name: "", email: "", token: 100, role: "FREE" })
-    const [token, setToken] = useState<any>(100)
+    const [userData, setUserData] = useState<any>({ name: "", email: "", token: 100, role: "" })
 
     useEffect(() => {
-        async function getToken() {
-            const data = JSON.parse(await getCookie("user") || "")
-            setToken(data.token)
-        }
-
-        getToken()
-    }, [userData])
+  async function loadUser() {
+    try {
+      const data = JSON.parse(await getCookie("user") || "{}");
+      if (data.token) setUserData(data);
+    } catch {
+      handleError("Their was some issue while logging you in! Please try again.")
+    }
+  }
+  loadUser();
+}, []);
 
     return (
         <nav className={`${poppins.className} flex justify-between items-center overflow-x-hidden px-6 py-3 fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-black/10 border-b border-white/20`}>
@@ -31,7 +34,7 @@ export default function Navbar({ name }: NavProps) {
                 <Link href="/" className={`text-white text-2xl text-gray-300 font-bold`}>{name}</Link>
             </div>
             <div className="flex gap-4">
-                <div className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"><span  className="inline-block w-4 h-4 bg-contain bg-no-repeat mr-2 pt-2" style={{ backgroundImage: 'url("/Token.png")' }}></span>{token}</div>
+                <div className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"><span  className="inline-block w-4 h-4 bg-contain bg-no-repeat mr-2 pt-2" style={{ backgroundImage: 'url("/Token.png")' }}></span>{userData.token}</div>
                 <Link href="/pro" className="text-white text-sm px-4 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50">Pro</Link>
                 <Login userData={userData} setUserData={setUserData} />
             </div>

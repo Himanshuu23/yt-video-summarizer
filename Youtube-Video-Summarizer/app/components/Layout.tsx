@@ -10,6 +10,7 @@ import { generatePdf } from "../libs/generatePdf";
 import { translate } from "../libs/translateText";
 import Error from "./Error";
 import SelectFeatures from "./SelectFeatures";
+import { getCookie } from "../libs/cookie";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -42,6 +43,7 @@ export default function Layout({
     dark: null,
   });
   const [selectedLanguage, setSelectedLanguage] = useState("en");
+  const [token, setToken] = useState<number>(100)
 
   const handleThemeChange = (theme: string) => {
     setPdfTheme(theme);
@@ -52,6 +54,16 @@ export default function Layout({
     }
   };
 
+  async function getToken() {
+    const user = await getCookie("user");
+    if (user) {
+      const token = JSON.parse(user).token
+      return token;
+    }
+
+    return 100;
+  }
+
   useEffect(() => {
     if (response && !cachedPdfs[pdfTheme]) {
       generatePdf(response, questions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
@@ -59,19 +71,24 @@ export default function Layout({
   }, [pdfTheme, response]);
 
   useEffect(() => {
-    if (response) {
-      (async () => {
-        const translatedSummary = await translate(selectedLanguage, response);
-        const translatedQuestions = await translate(selectedLanguage, questions);
-        setResponse(translatedSummary);
-        setQuestions(translatedQuestions);
-        generatePdf(translatedSummary, translatedQuestions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
-      })();
-    }
-  }, [selectedLanguage, response]);
+  if (response) {
+    (async () => {
+      console.log(selectedLanguage)
+      const translatedSummary = await translate(selectedLanguage, response);
+      const translatedQuestions = await translate(selectedLanguage, questions);
+      setResponse(translatedSummary);
+      setQuestions(translatedQuestions);
+      generatePdf(translatedSummary, translatedQuestions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
+    })();
+  }
+}, [selectedLanguage]);
+
+  useEffect(() => {
+    getToken() 
+  }, [token])
 
   return (
-    <div id="video" className={`h-screen w-screen bg-black overflow-hidden flex ${type === 2 ? 'my-0' : 'my-24'} flex-col md:flex-row`}>
+    <div id={type === 1 ? "video" : "notes"} className={`h-screen w-screen bg-black overflow-hidden flex ${type === 2 ? 'my-0' : 'my-24'} flex-col md:flex-row`}>
       {type === 2 ? (
         <>
           <div className="w-full md:w-2/5 h-full flex items-center justify-center relative mt- md:mt-0 md:ml-14">
@@ -101,7 +118,9 @@ export default function Layout({
               className="w-full mt-16 md:w-1/2 mt-16 bg-transparent text-white text-lg border border-slate-200 rounded-md px-4 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow-md"
             />
             <Error message={errorMessage} />
-            <SelectFeatures token={10} setSelectedFeatures={setSelectedFeatures} />
+            <SelectFeatures 
+             token={token}
+             setSelectedFeatures={setSelectedFeatures} />
             <button
               type="button"
               onClick={handleSubmit}
@@ -142,7 +161,9 @@ export default function Layout({
               />
             )}
             <Error message={errorMessage} />
-            <SelectFeatures token={100} setSelectedFeatures={setSelectedFeatures} />
+            <SelectFeatures 
+             token={token}
+             setSelectedFeatures={setSelectedFeatures} />
             <button
               type="button"
               onClick={handleSubmit}
