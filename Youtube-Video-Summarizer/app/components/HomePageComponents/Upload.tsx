@@ -16,6 +16,7 @@ export default function UploadComponent() {
   const [questions, setQuestions] = useState<string>("")
   const [imageBuffer, setImageBuffer] = useState<string>("")
   const [error, setError] = useState<string>("");
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const uploadedFile = e.target.files?.[0];
@@ -40,7 +41,7 @@ export default function UploadComponent() {
       try {
         const res = await fetch("http://localhost:8000/summarize/file", {
           method: "POST",
-          body: formData,
+          body: formData, // need to send the features: selectedFeatures to the backend too
         });
         const data = await res.json();
         setResponse(data.summary);
@@ -54,7 +55,7 @@ export default function UploadComponent() {
   }
 
   return (
-    <Layout title1="Making Long Notes Short" title2="Light Work" subtitle="Upload your document or book to receive summarized notes highlighting key points, available in multiple formats, and complemented with related questions to enhance understanding and retention." imageUrl="/hero-2.png" response={response} questions={questions} imageBuffer={imageBuffer} url={url} setQuestions={setQuestions} setResponse={setResponse} setUrl={setUrl} handleSubmit={handleSubmit} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} type={2} errorMessage={error} />
+    <Layout title1="Making Long Notes Short" title2="Light Work" subtitle="Upload your document or book to receive summarized notes highlighting key points, available in multiple formats, and complemented with related questions to enhance understanding and retention." imageUrl="/hero-2.png" response={response} questions={questions} imageBuffer={imageBuffer} url={url} setQuestions={setQuestions} setResponse={setResponse} setUrl={setUrl} handleSubmit={handleSubmit} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} type={2} errorMessage={error} setSelectedFeatures={setSelectedFeatures} />
   );   
 }
 

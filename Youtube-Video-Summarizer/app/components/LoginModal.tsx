@@ -3,8 +3,9 @@ import { signIn } from "next-auth/react";
 import { LoginModalProps } from "../types/props";
 import Login from "./Login";
 import SignIn from "./Signin";
+import { setCookie } from "../libs/cookie";
 
-export default function LoginModal({ session, closeModal }: LoginModalProps) {
+export default function LoginModal({ session, closeModal, setIsLoggedIn, setUserData }: LoginModalProps) {
   const [showSignUp, setShowSignUp] = useState(false);
   const [email, setEmail] = useState<string>("")
   const [password, setPassword] = useState<string>("")
@@ -17,6 +18,16 @@ export default function LoginModal({ session, closeModal }: LoginModalProps) {
     const response = await fetch(`http://localhost:8000/user?email=${email}`, {
       method: "GET"
     })
+
+    const result = await response.json();
+    {result && setUserData({
+      name: result.name,
+      email: result.email,
+      token: result.token,
+      role: result.role,
+    })}
+
+    setCookie("user", JSON.stringify({ name: result.name, email: result.email, token: result.token, role: result.token }))
     
     console.log(response);
   }
@@ -27,16 +38,6 @@ export default function LoginModal({ session, closeModal }: LoginModalProps) {
       getUserData(session?.user?.email)
     }
   }, [session])
-
-  async function updateUserTokens(email: string, amount: number) {
-    const response = await fetch("http://localhost:8000/token", {
-      method: "PATCH",
-      body: JSON.stringify({ email: email, amount: amount }),
-      headers: { "Application-Type": "application/json" }
-    })
-
-    console.log(response);
-  }
 
   async function updateUserRole(email: string, role: string) {
     const response = await fetch("http://localhost:8000/role", {
@@ -67,7 +68,7 @@ export default function LoginModal({ session, closeModal }: LoginModalProps) {
         {showSignUp ? (
           <SignIn email={email} password={password} setEmail={setEmail} setPassword={setPassword} setShowSignUp={setShowSignUp} session={session} />
         ) : (
-          <Login email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} setShowSignUp={setShowSignUp} session={session} closeModal={closeModal} />
+          <Login email={email} password={password} setEmail={setEmail} setPassword={setPassword} handleLogin={handleLogin} setShowSignUp={setShowSignUp} closeModal={closeModal} setIsLoggedIn={setIsLoggedIn} setUserData={setUserData} />
         )}
       </div>
     </div>

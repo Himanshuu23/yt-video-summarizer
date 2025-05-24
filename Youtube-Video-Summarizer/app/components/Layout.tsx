@@ -32,7 +32,8 @@ export default function Layout({
   isModalOpen,
   setIsModalOpen,
   type,
-  errorMessage
+  errorMessage,
+  setSelectedFeatures
 }: LayoutProps) {
   const [pdfTheme, setPdfTheme] = useState("default");
   const [previewPdfUrl, setPreviewPdfUrl] = useState<string | null>(null);
@@ -40,7 +41,6 @@ export default function Layout({
     default: null,
     dark: null,
   });
-
   const [selectedLanguage, setSelectedLanguage] = useState("en");
 
   const handleThemeChange = (theme: string) => {
@@ -101,7 +101,7 @@ export default function Layout({
               className="w-full mt-16 md:w-1/2 mt-16 bg-transparent text-white text-lg border border-slate-200 rounded-md px-4 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow-md"
             />
             <Error message={errorMessage} />
-            <SelectFeatures token={10} />
+            <SelectFeatures token={10} setSelectedFeatures={setSelectedFeatures} />
             <button
               type="button"
               onClick={handleSubmit}
@@ -142,7 +142,7 @@ export default function Layout({
               />
             )}
             <Error message={errorMessage} />
-            <SelectFeatures token={100} />
+            <SelectFeatures token={100} setSelectedFeatures={setSelectedFeatures} />
             <button
               type="button"
               onClick={handleSubmit}

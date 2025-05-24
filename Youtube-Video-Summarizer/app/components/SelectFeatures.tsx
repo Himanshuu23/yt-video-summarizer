@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Error from "./Error";
 
-const SelectFeatures = ({ token }: { token: number }) => {
+const SelectFeatures = ({ token, setSelectedFeatures }: { token: number, setSelectedFeatures: (features: string[]) => void }) => {
   const [values, setValues] = useState<number[]>([]);
 
   const options = [
@@ -13,6 +13,11 @@ const SelectFeatures = ({ token }: { token: number }) => {
   const sum = values.reduce((acc, val) => acc + val, 0);
   const minOptionCost = Math.min(...options.map((o) => o.value));
   const canSelect = token >= minOptionCost;
+
+  useEffect(() => {
+    const selectedLabels = options.filter(opt => values.includes(opt.value)).map(opt => opt.label);
+    setSelectedFeatures(selectedLabels);
+  }, [values]);
 
   const handleCheckboxChange = (value: number) => {
     if (!values.includes(value)) {
@@ -26,18 +31,15 @@ const SelectFeatures = ({ token }: { token: number }) => {
   return (
     <div style={{ transform: 'translateX(-2%)' }} className="flex flex-col mt-8 px-4 text-white">
       <div className="text-lg font-bold mb-2">What All To Include?</div>
-
       {!canSelect && (
         <Error message="You don't have enough tokens to select any feature!" />
       )}
-
       <div className="w-full my-4 md:w-2/3 flex flex-wrap gap-4">
         {options.map((opt) => {
           const isChecked = values.includes(opt.value);
           const wouldExceed = sum + opt.value > token;
           const shouldDisable =
             (!isChecked && (wouldExceed || token < opt.value)) || !canSelect;
-
           return (
             <label
               key={opt.value}

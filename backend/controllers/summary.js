@@ -14,13 +14,15 @@ const extractTextFromDocument = (fileBuffer) => {
 };
 
 const summarizeVideo = async (req, res) => {
-    const { videoUrl } = req.body;
-    
+    const { videoUrl, features, role } = req.body;
+
+    console.log(features)
+
     if (!videoUrl) {
         return res.status(400).json({ error: 'YouTube video URL is required.' });
     }
 
-    let videoId;
+    let videoId, questions, compressedBase64;
 
     if (videoUrl.includes('youtu.be')) {
         videoId = videoUrl.split('/').pop().split('?')[0];
@@ -31,13 +33,17 @@ const summarizeVideo = async (req, res) => {
     }
 
     try {
-        const transcript = await fetchTranscript(videoId);
+        const transcript = await fetchTranscript(videoId, role);
         const summary = await summarizeTextInChunks(transcript);
         const betterSummary = cleanSummary(summary);
         const finalSummary = cleanHTMLentities(betterSummary);
-        const questions = await generateQuestions(finalSummary);
-        const base64Image = await generateImage(finalSummary);
-        const compressedBase64 = Buffer.from(base64Image, 'base64').toString('base64');
+        if (features.includes("Questions & Answers")) {
+            questions = await generateQuestions(finalSummary);
+        }
+        if (features.includes("Flowchart & Diagrams")) {
+            const base64Image = await generateImage(finalSummary);
+            compressedBase64 = Buffer.from(base64Image, 'base64').toString('base64');
+        }
 
         res.json({ summary: finalSummary, questions: questions, buffer: Array.from(compressedBase64) });
     } catch (error) {

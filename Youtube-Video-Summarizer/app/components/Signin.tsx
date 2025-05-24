@@ -20,14 +20,6 @@ export default function SignIn ({ email, password, setEmail, setPassword, setSho
     console.log(res);
   }
 
-  async function getUser(email: string, password: string) {
-    const response = await fetch(`https://localhost:8000/user?email=${email}&?password=${password}`, {
-      method: "GET",
-    })
-
-    console.log(response)
-  }
-
   useEffect(() => {
   if (session?.user?.email && session?.user?.name) {
     signInUser(session.user.name, session.user.email, "password");

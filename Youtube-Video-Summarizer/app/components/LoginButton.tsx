@@ -1,22 +1,23 @@
 'use client'
 
 import React from "react";
-import { signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { useState } from "react";
 import ReactDOM from "react-dom";
 import LoginModal from "./LoginModal";
 import Profile from "./Profile";
 
-export default function LoginButton() {
+export default function LoginButton({ userData, setUserData }: { userData: any, setUserData: any }) {
  const { data: session } = useSession();
  const [isOpen, setIsOpen] = useState(false);
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
 
  const openModal = () => setIsOpen(true);
  const closeModal = () => setIsOpen(false);
 
- if (session) {
+ if (session || isLoggedIn) {
    return (
-     <Profile session={session} />
+     <Profile session={session} setIsLoggedIn={setIsLoggedIn} userData={userData} />
    );
  }
 
@@ -28,7 +29,7 @@ export default function LoginButton() {
      >
        Login
      </button>
-     {isOpen && ReactDOM.createPortal(<LoginModal session={session} closeModal={closeModal} />, document.body)}
+     {isOpen && ReactDOM.createPortal(<LoginModal session={session} closeModal={closeModal} setIsLoggedIn={setIsLoggedIn} setUserData={setUserData} />, document.body)}
    </div>
  );
 }

@@ -1,19 +1,32 @@
+import { setCookie } from "../libs/cookie";
 import { LoginProps } from "../types/props";
 import GithubLogo from "./logos/Github";
 import GoogleLogo from "./logos/Google";
 
-export default function Login({ email, password, setEmail, setPassword, handleLogin, setShowSignUp, session, closeModal }: LoginProps) {
+export default function Login({ email, password, setEmail, setPassword, handleLogin, setShowSignUp, closeModal, setIsLoggedIn, setUserData }: LoginProps) {
   
   async function loginUser(email: string, password: string) {
     const res = await fetch(`http://localhost:8000/user?email=${email}&password=${password}`, {
       method: "GET",
     })
 
-    setEmail("");
-    setPassword("");
-    closeModal();
+    const result = await res.json();
+    setIsLoggedIn(true)
 
-    console.log(res);
+    {result && setUserData({
+      name: result.name,
+      email: result.email,
+      token: result.token,
+      role: result.role,
+    })}
+
+    setCookie("user", JSON.stringify({ name: result.name, email: result.email, token: result.token, role: result.token }))
+
+    if (result && !result.error) {
+      setEmail("");
+      setPassword("");
+      closeModal();
+    }
   }
 
     return (

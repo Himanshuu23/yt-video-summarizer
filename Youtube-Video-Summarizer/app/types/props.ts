@@ -32,6 +32,8 @@ export interface NavProps {
 export interface LoginModalProps {
     closeModal: () => void;
     session: Session | null;
+    setIsLoggedIn: (isLoggedIn: boolean) => void;
+    setUserData: (user: any) => void;
 }
 
 export interface SpeechProps {
@@ -69,6 +71,7 @@ export interface LayoutProps {
     isModalOpen: boolean;
     setIsModalOpen: (currentState: boolean) => void;
     errorMessage: string;
+    setSelectedFeatures: (features: string[]) => void;
 }
 
 export interface LoginProps {
@@ -78,8 +81,9 @@ export interface LoginProps {
     setEmail: (email: string) => void;
     password: string;
     setPassword: (name: string) => void;
-    session: Session | null;
     closeModal: () => void;
+    setIsLoggedIn: (isLoggedIn: boolean) => void;
+    setUserData: (user: any) => void;
 }
 
 export interface SignInProps {

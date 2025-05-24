@@ -11,10 +11,18 @@ const poppins = Poppins({
   weight: ['400', '700']
 });
 
-export default function Profile({ session }: { session: Session }) {
+export default function Profile({ session, setIsLoggedIn, userData }: { session: Session | null, setIsLoggedIn: (isLoggedIn: boolean) => void, userData: any }) {
   const [isOpen, setIsOpen] = useState(false)
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const buttonRef = useRef<HTMLDivElement>(null)
+
+  function handleLogout() {
+    if (session) {
+      signOut();
+    }
+    setIsLoggedIn(false);
+    
+  }
 
   const toggleModal = () => {
     if (buttonRef.current) {
@@ -55,8 +63,8 @@ export default function Profile({ session }: { session: Session }) {
   }
   onClick={toggleModal}
 >
-  {!session?.user?.image &&
-    `${session?.user?.name?.split(" ")[0][0] ?? ""}${session?.user?.name?.split(" ").slice(-1)[0][0] ?? ""}`}
+  {!session?.user?.image && userData.name &&
+    `${userData.name.split(" ")[0][0] ?? ""}${userData.name.split(" ").slice(-1)[0][0] ?? ""}`}
 </div>
 
       {isOpen &&
@@ -69,10 +77,10 @@ export default function Profile({ session }: { session: Session }) {
               position: "absolute",
             }}
           >
-            <p className="text-sm mb-1">{session?.user?.name}</p>
+            <p className="text-sm mb-1">{userData.name}</p>
             <p className="text-sm text-gray-300 mx-2 mb-3"><b>Current Plan</b> Premium</p>
             <button
-              onClick={() => signOut()}
+              onClick={() => handleLogout()}
               className="text-white text-xs px-2 py-2 rounded-full bg-gray-700/50 hover:bg-gray-600/50"
             >
               Logout

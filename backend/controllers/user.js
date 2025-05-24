@@ -24,21 +24,24 @@ async function login(req, res) {
     const email = req.query.email;
     const password = req.query.password;
 
-    console.log(email, password)
     try {
+        await prisma.$connect();
+
         const user = await prisma.user.findUnique({
             where: {
                 email
             }
-        })
+        });
 
-        if (await bcrypt.compare(password, user.password)) {
-            return res.send(JSON.stringify({ user: user }))
+        if (user && await bcrypt.compare(password, user.password)) {
+            return res.send(JSON.stringify({ user: user }));
         }
 
-        return res.send(JSON.stringify({ error: "User not found!" }))
+        return res.send(JSON.stringify({ error: "User not found!" }));
     } catch (error) {
-        return res.send(JSON.stringify({ error: error }))
+        return res.send(JSON.stringify({ error: error.message }));
+    } finally {
+        await prisma.$disconnect();
     }
 }
 

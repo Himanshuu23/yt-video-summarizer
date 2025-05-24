@@ -42,4 +42,7 @@ ON THE BASIS OF USAGE FOR THE SAME AS PEOPLE WOULD BE UPLOADING LOADS OF DATA TO
 -> first save the user data in the db -> then we need to develop a token system for the user so based on that we would provide them free trials and etc stuff -> so in this we can also handle the thing for roles like if premium then what features to show them and etc stuff as well
 -> they can choose whether to generate a flowchart or questions and etc for the same -> make like a checkbox kind of a system where the user clicks generate summary their only
 -> for the trail we would keep the rates of the token like - by default free user has 100 tokens and cost of having image in the summary would be 50, 40 would be for questions, and 30 would be for translation into any language they would get to generate one summary per day
+
 -----
+
+4. payment - razorpay
