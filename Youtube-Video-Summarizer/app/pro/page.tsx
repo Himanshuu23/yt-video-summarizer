@@ -84,7 +84,7 @@ export default function Pricing() {
         Choose an affordable plan that’s packed with the best features for enhancing your work, knowledge and boosting fun.
       </p>
       <div className="mx-auto mt-16 grid max-w-[80rem] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {tiers.map((tier, tierIdx) => (
+        {tiers.map((tier) => (
           <div
             key={tier.id}
             className={classNames(

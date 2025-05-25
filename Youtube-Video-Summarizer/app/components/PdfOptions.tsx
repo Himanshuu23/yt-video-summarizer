@@ -7,7 +7,7 @@ export default function PdfOptions({ summary, questions, imageBuffer, pdfUrl, ge
     const [isPdfVisible, setIsPdfVisible] = useState(false);
 
     const handlePdf = () => {
-        generatePdf(summary, questions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
+        generatePdf(summary, questions, imageBuffer ?? "", pdfTheme, setCachedPdfs, setPreviewPdfUrl);
         setIsPdfVisible(true);
     };
 

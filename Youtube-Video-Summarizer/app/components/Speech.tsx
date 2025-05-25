@@ -13,7 +13,7 @@ export default function Speech({ summary, questions, selectedLanguage }: SpeechP
         const utterance = new SpeechSynthesisUtterance(text);
         const voices = window.speechSynthesis.getVoices();
         utterance.voice =
-          voices.find((v) => v.lang.startsWith(selectedLanguage)) || voices[0];
+          voices.find((v) => v.lang.startsWith(selectedLanguage ?? "en")) || voices[0];
     
         return utterance;
       };

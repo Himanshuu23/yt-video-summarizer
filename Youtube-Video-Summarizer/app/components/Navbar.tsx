@@ -7,6 +7,7 @@ import { NavProps } from '../types/props';
 import { useEffect, useState } from 'react';
 import { getCookie } from '../libs/cookie';
 import { handleError } from '../libs/handleError';
+import { UserDataTypes } from '../types/user';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -14,7 +15,7 @@ const poppins = Poppins({
 });
 
 export default function Navbar({ name }: NavProps) {
-    const [userData, setUserData] = useState<any>({ name: "", email: "", token: 100, role: "" })
+    const [userData, setUserData] = useState<UserDataTypes>({ name: "", email: "", token: 100, role: "" })
 
     useEffect(() => {
   async function loadUser() {

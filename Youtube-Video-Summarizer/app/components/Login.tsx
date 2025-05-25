@@ -14,12 +14,14 @@ export default function Login({ email, password, setEmail, setPassword, handleLo
     const result = await res.json();
     setIsLoggedIn(true)
 
-    {result && setUserData({
-      name: result.user.name,
-      email: result.user.email,
-      token: result.user.token,
-      role: result.user.role,
-    })}
+    if (result) {
+      setUserData({
+        name: result.user.name,
+        email: result.user.email,
+        token: result.user.token,
+        role: result.user.role,
+      })
+    }
     setCookie("user", JSON.stringify({ name: result.user.name, email: result.user.email, token: result.user.token, role: result.user.role }))
 
     if (result && !result.error) {

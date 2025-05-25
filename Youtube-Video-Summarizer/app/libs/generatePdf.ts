@@ -1,9 +1,14 @@
+import { ErrorType } from "../types/error";
+import { ThemeType } from "../types/theme";
 import { getCookie, setCookie } from "./cookie";
 import { handleError } from "./handleError";
+import { calculateTokenCost, updateUserTokens } from "./handleToken";
 
-export async function generatePdf(response: string, questions: string, buffer: string, pdfTheme: string, setCachedPdfs: any, setPreviewPdfUrl: any) {
+export async function generatePdf(response: string, questions: string, buffer: string, pdfTheme: string, setCachedPdfs: (pdf: (prev: ThemeType) => ThemeType) => void
+, setPreviewPdfUrl: (url: string) => void) {
   try {
-    const user = JSON.parse(await getCookie("user") || "");
+    const cookie = getCookie("user");
+    const user = JSON.parse(cookie || "");
     const email = user.email;
     const role = user.role;
 
@@ -33,10 +38,11 @@ export async function generatePdf(response: string, questions: string, buffer: s
     const newResult = await newResponse.json();
 
     setCookie("user", JSON.stringify({ name: newResult.name, email: newResult.email, token: newResult.token, role: newResult.role }));
-    setCachedPdfs((prev: any) => ({ ...prev, [pdfTheme]: url }));
+    setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
     setPreviewPdfUrl(url);
     return url;
-  } catch (err: any) {
-    handleError(err.message);
+  } catch (err) {
+    const error = err as ErrorType
+    handleError(error.message);
   }
 }

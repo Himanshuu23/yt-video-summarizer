@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { LoginModalProps } from "../types/props";
 import Login from "./Login";
@@ -14,30 +14,42 @@ export default function LoginModal({ session, closeModal, setIsLoggedIn, setUser
     signIn(provider);
   };
 
-  async function getUserData(email: string) {
-    const response = await fetch(`http://localhost:8000/user?email=${email}`, {
-      method: "GET"
-    })
+  const getUserData = useCallback(async (email: string) => {
+  const response = await fetch(`http://localhost:8000/user?email=${email}`, {
+    method: "GET",
+  });
 
-    const result = await response.json();
-    {result && setUserData({
+  const result = await response.json();
+
+  if (result) {
+    setUserData({
       name: result.user.name,
       email: result.user.email,
       token: result.user.token,
       role: result.user.role,
-    })}
+    });
 
-    setCookie("user", JSON.stringify({ name: result.user.name, email: result.user.email, token: result.user.token, role: result.user.role }))
-    
-    console.log(response);
+    setCookie(
+      "user",
+      JSON.stringify({
+        name: result.user.name,
+        email: result.user.email,
+        token: result.user.token,
+        role: result.user.role,
+      })
+    );
   }
+
+  console.log(response);
+}, [setUserData]);
+
 
   useEffect(() => {
     if (session && session?.user?.email) {
       closeModal()
       getUserData(session?.user?.email)
     }
-  }, [session])
+  }, [session, closeModal, getUserData])
 
   return (
     <div

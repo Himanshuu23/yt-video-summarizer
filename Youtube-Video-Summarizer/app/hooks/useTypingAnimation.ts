@@ -33,5 +33,5 @@ export default function useTypingEffect(
       }, 15);
 
       return () => clearInterval(interval);
-    }, [text]);
+    }, [text, setCursor, setTypedText]);
 };

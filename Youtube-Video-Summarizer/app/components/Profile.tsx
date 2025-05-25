@@ -6,13 +6,14 @@ import { Session } from "next-auth"
 import { createPortal } from "react-dom"
 import { Poppins } from "next/font/google"
 import { capitalizeWords } from "../libs/text"
+import { UserDataTypes } from "../types/user"
 
 const poppins = Poppins({
   subsets: ['latin'],
   weight: ['400', '700']
 });
 
-export default function Profile({ session, setIsLoggedIn, userData, isLoggedIn }: { session: Session | null, setIsLoggedIn: (isLoggedIn: boolean) => void, userData: any, isLoggedIn: boolean }) {
+export default function Profile({ session, setIsLoggedIn, userData, isLoggedIn }: { session: Session | null, setIsLoggedIn: (isLoggedIn: boolean) => void, userData: UserDataTypes, isLoggedIn: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
   const [position, setPosition] = useState({ top: 0, left: 0 })
   const buttonRef = useRef<HTMLDivElement>(null)

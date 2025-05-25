@@ -30,7 +30,7 @@ export default function Modal() {
             <button onClick={closeModal} className="absolute p-2 top-1 right-2 text-white text-2xl">
               &times;
             </button>
-            <p className="text-white text-center">Due to unforeseen circumstances, the payment gateway is temporarily unavailable. We're working to resolve this as soon as possible. Thanks for understanding!</p>
+            <p className="text-white text-center">Due to unforeseen circumstances, the payment gateway is temporarily unavailable. We&apos;re working to resolve this as soon as possible. Thanks for understanding!</p>
           </div>
         </div>
       )}

@@ -6,8 +6,9 @@ import { useState } from "react";
 import ReactDOM from "react-dom";
 import LoginModal from "./LoginModal";
 import Profile from "./Profile";
+import { UserDataTypes } from "../types/user";
 
-export default function LoginButton({ userData, setUserData }: { userData: any, setUserData: any }) {
+export default function LoginButton({ userData, setUserData }: { userData: UserDataTypes, setUserData: (data: UserDataTypes) => void }) {
  const { data: session, status } = useSession();
  const [isOpen, setIsOpen] = useState(false);
  const [isLoggedIn, setIsLoggedIn] = useState(false);

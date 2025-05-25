@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Error from "./Error";
 
 const SelectFeatures = ({ token, setSelectedFeatures }: { token: number, setSelectedFeatures: (features: string[]) => void }) => {
   const [values, setValues] = useState<number[]>([]);
 
-  const options = [
-    { label: "Questions & Answers", value: 40 },
-    { label: "Flowchart & Diagrams", value: 50 },
-    { label: "Translation Options", value: 30 },
-  ];
+  const options = useMemo(() => [
+  { label: "Questions & Answers", value: 40 },
+  { label: "Flowchart & Diagrams", value: 50 },
+  { label: "Translation Options", value: 30 },
+], []);
+
 
   const sum = values.reduce((acc, val) => acc + val, 0);
   const minOptionCost = Math.min(...options.map((o) => o.value));
@@ -17,7 +18,7 @@ const SelectFeatures = ({ token, setSelectedFeatures }: { token: number, setSele
   useEffect(() => {
     const selectedLabels = options.filter(opt => values.includes(opt.value)).map(opt => opt.label);
     setSelectedFeatures(selectedLabels);
-  }, [values]);
+  }, [values, options, setSelectedFeatures]);
 
   const handleCheckboxChange = (value: number) => {
     if (!values.includes(value)) {

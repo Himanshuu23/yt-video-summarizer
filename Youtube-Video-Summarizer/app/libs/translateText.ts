@@ -1,3 +1,4 @@
+import { ErrorType } from "../types/error";
 import { handleError } from "./handleError";
 
 export async function translate(language: string, text: string) {
@@ -12,8 +13,9 @@ export async function translate(language: string, text: string) {
   
       const result = await res.json();
       return result.translatedText;
-    } catch (err: any) {
-      handleError(err.message);
+    } catch (err) {
+      const error = err as ErrorType 
+      handleError(error.message);
       return text;
     }
   }
