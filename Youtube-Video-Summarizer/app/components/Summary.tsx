@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { SummaryProps } from "../types/props";
 import Loading from "./Loading";
 import Speech from "./Speech";
@@ -20,20 +20,25 @@ export default function Summary({
   generatePdf,
   pdfTheme, 
   setCachedPdfs,
-  setPreviewPdfUrl
+  setPreviewPdfUrl,
+  handleLanguageChange
 }: SummaryProps) {
-  
   const [languages, setLanguages] = useState({});
 
-  useEffect(() => {
-    fetch("/languages.json")
-      .then((res) => res.json())
-      .then((json) => setLanguages(json));
-  }, []);
+  async function changeLanguage(e: ChangeEvent<HTMLSelectElement>) {
+    setSelectedLanguage(e.target.value);
+    handleLanguageChange(selectedLanguage || "en");
+  }
+
+  // useEffect(() => {
+  //   fetch("/languages.json")
+  //     .then((res) => res.json())
+  //     .then((json) => setLanguages(json));
+  // }, []);
 
   return (
     isOpen ? (
-      summary ? (
+      summary? (
         <div
           className="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50"
           onClick={closeModal}
@@ -55,13 +60,14 @@ export default function Summary({
                   <Speech summary={summary} questions={questions} selectedLanguage={selectedLanguage} />
                 </div>
                 <select
-                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  value={selectedLanguage}
+                  onChange={(e) => changeLanguage(e)}
                   className="bg-black font-light text-white w-32 mr-8"
                 >
-                  {languages &&
+                  {Object.keys(languages).length > 0 &&
                     Object.entries(languages as [string, string]).map(
                       ([language, code]) => (
-                        <option key={code} value={code} selected={code === "en"}>
+                        <option key={code} value={code}>
                           {language}
                         </option>
                       )
@@ -69,7 +75,17 @@ export default function Summary({
                 </select>
               </h2>
               <Text summary={summary} questions={questions} />
-              <PdfOptions pdfTheme={pdfTheme} setCachedPdfs={setCachedPdfs} setPreviewPdfUrl={setPreviewPdfUrl} summary={summary} questions={questions} imageBuffer={imageBuffer} pdfUrl={pdfUrl} generatePdf={generatePdf} handleThemeChange={handleThemeChange} />
+              <PdfOptions
+                pdfTheme={pdfTheme}
+                setCachedPdfs={setCachedPdfs}
+                setPreviewPdfUrl={setPreviewPdfUrl}
+                summary={summary}
+                questions={questions}
+                imageBuffer={imageBuffer}
+                pdfUrl={pdfUrl}
+                generatePdf={generatePdf}
+                handleThemeChange={handleThemeChange}
+              />
             </div>
           </div>
         </div>

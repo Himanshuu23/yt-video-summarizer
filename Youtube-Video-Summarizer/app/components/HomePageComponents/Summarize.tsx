@@ -18,29 +18,30 @@ const Summarize = forwardRef<HTMLDivElement>(() => {
     const cookie = getCookie("user");
     const user = cookie ? JSON.parse(cookie) : null;
 
-    if (!user) {
-      setError("Please log in to summarize");
-      return;
-    }
+    // if (!user) {
+    //   setError("Please log in to summarize");
+    //   return;
+    // }
 
     if (url === "") {
       setError("Please Enter a URL first.");
       return;
     }
 
+    setIsModalOpen(true);
+
     try {
       const response = await fetch("http://localhost:8000/summarize/url", {
         method: "POST",
-        body: JSON.stringify({ videoUrl: JSON.stringify(url), features: selectedFeatures, role: user.role }),
+        body: JSON.stringify({ videoUrl: JSON.stringify(url), features: selectedFeatures, role: "FREE" }), // user.role
         headers: { "Content-type": "application/json" },
       });
 
       if (!response.ok) throw new Error("Server is busy. Please try again in a while.");
 
       const data = await response.json();
-
-      setIsModalOpen(true);
-      setResponse(data.response);
+      
+      setResponse(data.summary);
       setQuestions(data.questions);
       setImageBuffer(data.buffer);
 

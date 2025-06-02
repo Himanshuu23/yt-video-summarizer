@@ -20,10 +20,10 @@ export default function UploadComponent() {
     const cookie = getCookie("user");
     const user = cookie ? JSON.parse(cookie) : null;
 
-    if (!user) {
-      setError("Please log in to summarize");
-      return;
-    }
+    // if (!user) {
+    //   setError("Please log in to summarize");
+    //   return;
+    // }
 
     if (!file) {
       setError("Please Upload a File.");

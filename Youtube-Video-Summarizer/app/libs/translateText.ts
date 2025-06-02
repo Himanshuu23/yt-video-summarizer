@@ -14,8 +14,8 @@ export async function translate(language: string, text: string) {
       const result = await res.json();
       return result.translatedText;
     } catch (err) {
-      const error = err as ErrorType 
-      handleError(error.message);
+      console.log(err)
+      handleError("Their was a problem translating text. Please try again in a while.");
       return text;
     }
   }

@@ -65,24 +65,18 @@ export default function Layout({
     return setToken(100);
   }
 
+  async function handleLanguageChange(language: string) {
+  //     const translatedSummary = await translate(language, response);
+  //     const translatedQuestions = await translate(language, questions);
+  //     setResponse(translatedSummary);
+  //     setQuestions(translatedQuestions);
+  }
+
   useEffect(() => {
     if (response && !cachedPdfs[pdfTheme]) {
       generatePdf(response, questions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
     }
   }, [pdfTheme, response, imageBuffer, cachedPdfs, questions]);
-
-  useEffect(() => {
-  if (response) {
-    (async () => {
-      console.log(selectedLanguage)
-      const translatedSummary = await translate(selectedLanguage, response);
-      const translatedQuestions = await translate(selectedLanguage, questions);
-      setResponse(translatedSummary);
-      setQuestions(translatedQuestions);
-      generatePdf(translatedSummary, translatedQuestions, imageBuffer, pdfTheme, setCachedPdfs, setPreviewPdfUrl);
-    })();
-  }
-}, [selectedLanguage, imageBuffer, pdfTheme, questions, response, setQuestions, setResponse]);
 
   useEffect(() => {
     getToken() 
@@ -185,19 +179,20 @@ export default function Layout({
       </>
     )}
     {<Summary
-      pdfTheme={pdfTheme}
-      setCachedPdfs={setCachedPdfs}
-      setPreviewPdfUrl={setPreviewPdfUrl}
       isOpen={isModalOpen}
       closeModal={() => setIsModalOpen(false)}
       summary={response}
-      imageBuffer={imageBuffer}
       questions={questions}
+      imageBuffer={imageBuffer}
       pdfUrl={previewPdfUrl}
       handleThemeChange={handleThemeChange}
       selectedLanguage={selectedLanguage}
       setSelectedLanguage={setSelectedLanguage}
       generatePdf={generatePdf}
+      pdfTheme={pdfTheme}
+      setCachedPdfs={setCachedPdfs}
+      setPreviewPdfUrl={setPreviewPdfUrl}
+      handleLanguageChange={handleLanguageChange}
     />}
   </div>
 );

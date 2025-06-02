@@ -41,8 +41,8 @@ export async function generatePdf(response: string, questions: string, buffer: s
     setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
     setPreviewPdfUrl(url);
     return url;
-  } catch (err) {
-    const error = err as ErrorType
-    handleError(error.message);
+  } catch (error) {
+    console.log(error)
+    handleError("Their was an error while generating pdf. Please try again in a while.");
   }
 }

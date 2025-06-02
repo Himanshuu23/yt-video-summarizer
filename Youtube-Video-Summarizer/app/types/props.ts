@@ -31,6 +31,7 @@ export interface SummaryProps {
   pdfTheme: string;
   setCachedPdfs: (updater: (prev: ThemeType) => ThemeType) => void;
   setPreviewPdfUrl: (url: string) => void;
+  handleLanguageChange: (language: string) => void;
 }
 
 export interface NavProps {
