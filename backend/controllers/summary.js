@@ -16,13 +16,15 @@ const extractTextFromDocument = (fileBuffer) => {
 const summarizeVideo = async (req, res) => {
     const { videoUrl, features, role } = req.body;
 
-    if (role && role.length < 3) {
-        return res.error(401).json({ error: "Login In to summarize" })
-    }
+    // if (role && role.length < 3) {
+    //     return res.error(401).json({ error: "Login In to summarize" })
+    // }
 
     if (!videoUrl) {
         return res.status(400).json({ error: 'YouTube video URL is required.' });
     }
+
+    res.json({ summary: "this is the final summary for the same", questions: "these are the questions for the summary for the same", buffer: "this is the buffer for the same" });
 
     let videoId, questions, compressedBase64;
 
@@ -57,18 +59,41 @@ const summarizeText = async (req, res) => {
         return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    // if (role && role.length < 3) {
+    //     return res.error(401).json({ error: "Login In to summarize" })
+    // }
+
+    res.json({ summary: "this is the final summary for the same", questions: "these are the questions for the summary for the same", buffer: "this is the buffer for the same" });
+
+
     try {
+        const features = JSON.parse(req.body.features || "[]");
         const fileBuffer = req.file.buffer;
         const extractedText = await extractTextFromDocument(fileBuffer);
         const summary = await summarizeTextInChunks(extractedText);
         const cleanedSummary = cleanSummary(summary);
         const finalSummary = cleanHTMLentities(cleanedSummary);
-        const questions = await generateQuestions(finalSummary);
-        const buffer = await generateImage(finalSummary);
-        res.json({ summary: finalSummary, questions: questions, buffer: buffer });
+
+        let questions = null;
+        let buffer = null;
+
+        if (features.includes("Questions & Answers")) {
+            questions = await generateQuestions(finalSummary);
+        }
+
+        if (features.includes("Flowchart & Diagrams")) {
+            const base64Image = await generateImage(finalSummary);
+            buffer = Buffer.from(base64Image, 'base64').toString('base64');
+        }
+
+        res.json({
+            summary: finalSummary,
+            questions: questions,
+            buffer: buffer
+        });
     } catch (error) {
         res.status(500).json({ error: error.message });
-    }   
+    }
 }
 
 module.exports = { summarizeVideo, summarizeText };
