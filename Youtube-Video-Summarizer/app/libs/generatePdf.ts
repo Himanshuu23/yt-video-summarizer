@@ -1,4 +1,3 @@
-import { ErrorType } from "../types/error";
 import { ThemeType } from "../types/theme";
 import { getCookie, setCookie } from "./cookie";
 import { handleError } from "./handleError";
