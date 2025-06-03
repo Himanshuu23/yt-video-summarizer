@@ -22,7 +22,7 @@ export async function generatePdf(response: string, questions: string, buffer: s
       throw new Error("File size exceeds limit for your role");
     }
 
-    const res = await fetch("http://localhost:8000/pdf", {
+    const res = await fetch("https://yt-video-summarizer-tzf8.vercel.app/api/pdf", {
       method: "POST",
       body: JSON.stringify({ summary: response, theme: pdfTheme, questions, buffer }),
       headers: { "Content-type": "application/json" }

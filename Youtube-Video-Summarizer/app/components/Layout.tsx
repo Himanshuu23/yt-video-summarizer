@@ -7,10 +7,10 @@ import { Poppins } from "next/font/google";
 import { useEffect, useState } from "react";
 import { ThemeType } from "../types/theme";
 import { generatePdf } from "../libs/generatePdf";
-import { translate } from "../libs/translateText";
 import Error from "./Error";
 import SelectFeatures from "./SelectFeatures";
 import { getCookie } from "../libs/cookie";
+import { translate } from "../libs/translateText";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -66,10 +66,10 @@ export default function Layout({
   }
 
   async function handleLanguageChange(language: string) {
-  //     const translatedSummary = await translate(language, response);
-  //     const translatedQuestions = await translate(language, questions);
-  //     setResponse(translatedSummary);
-  //     setQuestions(translatedQuestions);
+      const translatedSummary = await translate(language, response);
+      const translatedQuestions = await translate(language, questions);
+      setResponse(translatedSummary);
+      setQuestions(translatedQuestions);
   }
 
   useEffect(() => {

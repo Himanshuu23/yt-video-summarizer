@@ -30,11 +30,11 @@ export default function Summary({
     handleLanguageChange(selectedLanguage || "en");
   }
 
-  // useEffect(() => {
-  //   fetch("/languages.json")
-  //     .then((res) => res.json())
-  //     .then((json) => setLanguages(json));
-  // }, []);
+  useEffect(() => {
+    fetch("/languages.json")
+      .then((res) => res.json())
+      .then((json) => setLanguages(json));
+  }, []);
 
   return (
     isOpen ? (

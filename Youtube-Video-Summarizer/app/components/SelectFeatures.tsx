@@ -6,7 +6,7 @@ const SelectFeatures = ({ token, setSelectedFeatures }: { token: number, setSele
 
   const options = useMemo(() => [
   { label: "Questions & Answers", value: 40 },
-  { label: "Flowchart & Diagrams", value: 50 },
+  { label: "Flowchart & Diagrams", value: 5000000000000000 },
   { label: "Translation Options", value: 30 },
 ], []);
 

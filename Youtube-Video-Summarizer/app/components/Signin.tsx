@@ -9,7 +9,7 @@ export default function SignIn ({ email, password, setEmail, setPassword, setSho
   const [name, setName] = useState<string>("")
 
   const signInUser = useCallback(async (name: string, email: string, password: string) => {
-  const res = await fetch("http://localhost:8000/user", {
+  const res = await fetch("https://yt-video-summarizer-tzf8.vercel.app/api/user", {
     method: "POST",
     body: JSON.stringify({ name, email, password }),
     headers: { "Content-type": "application/json" },
