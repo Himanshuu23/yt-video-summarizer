@@ -33,7 +33,7 @@ const Summarize = forwardRef<HTMLDivElement>(() => {
     try {
       const response = await fetch("https://yt-video-summarizer-e4zp.onrender.com/api/summarize/url", {
         method: "POST",
-        body: JSON.stringify({ videoUrl: JSON.stringify(url), features: selectedFeatures, role: "FREE" }), // user.role
+        body: JSON.stringify({ videoUrl: JSON.stringify(url), features: selectedFeatures, role: user.role }),
         headers: { "Content-type": "application/json" },
       });
 
