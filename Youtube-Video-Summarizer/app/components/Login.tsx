@@ -7,7 +7,7 @@ import GoogleLogo from "./logos/Google";
 export default function Login({ email, password, setEmail, setPassword, handleLogin, setShowSignUp, closeModal, setIsLoggedIn, setUserData }: LoginProps) {
   
   async function loginUser(email: string, password: string) {
-    const res = await fetch(`https://yt-video-summarizer-tzf8.vercel.app/api/user?email=${email}&password=${password}`, {
+    const res = await fetch(`https://yt-video-summarizer-e4zp.onrender.com/api/user?email=${email}&password=${password}`, {
       method: "GET",
     })
 

@@ -31,7 +31,7 @@ const Summarize = forwardRef<HTMLDivElement>(() => {
     setIsModalOpen(true);
 
     try {
-      const response = await fetch("https://yt-video-summarizer-tzf8.vercel.app/api/summarize/url", {
+      const response = await fetch("https://yt-video-summarizer-e4zp.onrender.com/api/summarize/url", {
         method: "POST",
         body: JSON.stringify({ videoUrl: JSON.stringify(url), features: selectedFeatures, role: "FREE" }), // user.role
         headers: { "Content-type": "application/json" },

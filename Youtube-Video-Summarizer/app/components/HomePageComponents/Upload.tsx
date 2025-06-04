@@ -37,7 +37,7 @@ export default function UploadComponent() {
       formData.append("file", file);
       formData.append("features", JSON.stringify(selectedFeatures));
 
-      const res = await fetch("https://yt-video-summarizer-tzf8.vercel.app/api/summarize/file", {
+      const res = await fetch("https://yt-video-summarizer-e4zp.onrender.com/api/summarize/file", {
         method: "POST",
         body: formData,
       });

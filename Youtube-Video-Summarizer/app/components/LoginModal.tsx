@@ -15,7 +15,7 @@ export default function LoginModal({ session, closeModal, setIsLoggedIn, setUser
   };
 
   const getUserData = useCallback(async (email: string) => {
-  const response = await fetch(`https://yt-video-summarizer-tzf8.vercel.app/api/user?email=${email}`, {
+  const response = await fetch(`https://yt-video-summarizer-e4zp.onrender.com/api/user?email=${email}`, {
     method: "GET",
   });
 

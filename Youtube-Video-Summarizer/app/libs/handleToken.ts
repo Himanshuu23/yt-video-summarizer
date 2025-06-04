@@ -16,7 +16,7 @@ export function calculateTokenCost(features: string[]) {
 }
 
 export async function updateUserTokens(email: string, amount: number) {
-    const response = await fetch("https://yt-video-summarizer-tzf8.vercel.app/api/user/token", {
+    const response = await fetch("https://yt-video-summarizer-e4zp.onrender.com/api/user/token", {
       method: "PATCH",
       body: JSON.stringify({ email: email, amount: amount }),
       headers: { "Content-Type": "application/json" }

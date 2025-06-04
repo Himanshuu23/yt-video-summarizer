@@ -2,7 +2,7 @@ import { handleError } from "./handleError";
 
 export async function translate(language: string, text: string) {
     try {
-      const res = await fetch("https://yt-video-summarizer-tzf8.vercel.app/api/translate", {
+      const res = await fetch("https://yt-video-summarizer-e4zp.onrender.com/api/translate", {
         method: "POST",
         body: JSON.stringify({ text, lang: language }),
         headers: { "Content-type": "application/json" },
