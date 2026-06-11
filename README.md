@@ -1,147 +1,131 @@
-# YouTube Video Summarizer - Microservices Architecture
+# YouTube Video Summarizer
 
-This project has been migrated to a microservices architecture with Go handling all processing, Redis caching, queuing, and worker pools, while Express serves as a thin REST API layer.
+A distributed AI-powered platform that transforms YouTube videos and PDF documents into concise summaries, multilingual translations, AI-generated questions, downloadable reports, and visual flowcharts and images along with TTS support.
 
-## Architecture Overview
+```text
+YouTube URL / PDF → Transcript Pipeline → AI Processing → API Layer → Interactive Web App
+```
 
-- **Frontend (Next.js)**: React-based UI
-- **Backend (Express)**: Thin REST API that calls gRPC services
-- **Go Microservice**: 
-  - **gRPC Server**: Handles all processing (transcript fetching, summarization, questions, images)
-  - **REST Server**: Load-balanced instances for queuing tasks
-  - **Workers**: Process queued tasks with Redis
-- **Redis**: Caching and task queue
-- **Nginx**: Load balancer for REST servers
+---
+
+## Architecture
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│                        Frontend Layer                       │
+│  Next.js 14 • React • NextAuth • TailwindCSS               │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                       API Gateway Layer                     │
+│  Express.js                                                 │
+│  ├─ Authentication                                          │
+│  ├─ User Management                                         │
+│  ├─ PDF Generation                                          │
+│  ├─ Translation Services                                    │
+│  └─ gRPC Client Gateway                                     │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                     Processing Layer (Go)                   │
+│  gRPC Processing Server                                     │
+│  ├─ Transcript Extraction                                   │
+│  ├─ PDF Text Extraction                                     │
+│  ├─ AI Summarization                                        │
+│  ├─ Question Generation                                     │
+│  ├─ Image Generation                                        │
+│  └─ Content Processing                                      │
+│                                                             │
+│  REST Services + Redis Queue + Worker Pool                 │
+└─────────────────────────────────────────────────────────────┘
+                              ↓
+┌─────────────────────────────────────────────────────────────┐
+│                    Infrastructure Layer                     │
+│  Redis → Cache + Task Queue                                 │
+│  Nginx → Load Balancer                                      │
+│  PostgreSQL → User Data                                     │
+│  Docker Compose → Service Orchestration                     │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## Features
+
+- YouTube Video Summarization
+- PDF Summarization
+- AI Question Generation
+- Translation
+- PDF Export
+- AI Image Generation
+- Authentication
+- Distributed Processing
 
 ## Services
 
-1. **grpc-server**: Single gRPC server instance (port 8000)
-2. **rest1/rest2**: Two REST server instances (port 90) - load balanced by nginx
-3. **worker1/worker2**: Two worker instances for processing tasks
-4. **backend**: Express API (port 8000)
-5. **frontend**: Next.js app (port 3000)
-6. **redis**: Redis cache and queue (port 6379)
-7. **nginx-rest**: Nginx load balancer (port 90)
+| Service | Purpose |
+|----------|----------|
+| grpc-server | Core processing engine |
+| rest1/rest2 | Processing API nodes |
+| worker1/worker2 | Background workers |
+| backend | Express API gateway |
+| frontend | Next.js application |
+| redis | Cache and queue |
+| nginx-rest | Load balancer |
 
-## Setup
+## Processing Flow
 
-### Prerequisites
+### Direct Processing
 
-- Docker and Docker Compose
-- Node.js (for local development)
-- Go 1.24+ (for local development)
-
-### Environment Variables
-
-Create a `.env` file in the root directory with:
-
-```env
-# BART API for summarization
-BART_API_KEY=your_bart_api_key
-BART_API_URL=https://api-inference.huggingface.co/models/facebook/bart-large-cnn
-BART_API_URL_TWO=https://api-inference.huggingface.co/models/your-model
-
-# Image generation
-IMAGE_PIG_API_KEY=your_image_pig_api_key
-
-# Database
-DATABASE_URL=your_database_url
-
-# gRPC Server Address (for backend)
-GRPC_SERVER_ADDR=grpc-server:8000
+```text
+Frontend → Express API → gRPC Server → AI Processing → Response
 ```
 
-### Running with Docker Compose
+### Queue-Based Processing
 
-```bash
-docker-compose up --build
+```text
+Frontend
+  ↓
+Express API
+  ↓
+REST Processing API
+  ↓
+Redis Task Queue
+  ↓
+Worker Pool
+  ↓
+gRPC Processing Server
+  ↓
+Redis Cache
+  ↓
+Response
 ```
 
-This will start all services:
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- REST API (load balanced): http://localhost:90
-- gRPC Server: localhost:8000 (internal)
+Workers consume jobs from Redis, process them through the gRPC server, and cache results for fast retrieval.
 
-### Local Development
+## Quick Start
 
-#### Backend (Express)
 ```bash
-cd backend
-npm install
-npm run devStart
+docker compose up --build
 ```
 
-#### Go Microservice
+### Frontend
 
-**gRPC Server:**
 ```bash
-cd microservice
-go run cmd/grpc_server/server.go
-```
-
-**REST Server:**
-```bash
-cd microservice
-go run cmd/rest/main.go
-```
-
-**Worker:**
-```bash
-cd microservice
-go run worker/main.go
-```
-
-#### Frontend
-```bash
-cd Youtube-Video-Summarizer
+cd client
 npm install
 npm run dev
 ```
 
-## API Endpoints
+### Backend
 
-### Express Backend (Port 8000)
+```bash
+cd server
+npm install
+npm run devStart
+```
 
-- `POST /api/summarize/url` - Summarize YouTube video
-- `POST /api/summarize/file` - Summarize PDF file
-- `POST /api/pdf` - Generate PDF
-- `POST /api/translate` - Translate text
-- `GET /api/user/*` - User management endpoints
+### Go Microservices
 
-### Go REST API (Port 90, load balanced)
-
-- `POST /summarize/url` - Queue URL summarization task
-- `POST /summarize/text` - Queue text summarization task
-
-## Architecture Flow
-
-1. **Frontend** → Makes request to **Express Backend**
-2. **Express Backend** → Calls **gRPC Server** for processing
-3. **gRPC Server** → Processes request (transcript, summary, questions, images)
-4. **Express Backend** → Returns response to **Frontend**
-
-Alternatively (for async processing):
-1. **Frontend** → Makes request to **Express Backend**
-2. **Express Backend** → Calls **Go REST API** (load balanced)
-3. **Go REST API** → Queues task in Redis
-4. **Worker** → Picks up task, calls **gRPC Server**, caches result
-5. **Go REST API** → Returns cached result
-
-## Load Balancing
-
-Nginx load balances requests between `rest1` and `rest2` instances. Configuration is in `microservice/nginx.conf`.
-
-## Notes
-
-- The Express backend now only handles:
-  - PDF generation
-  - Translation
-  - User management
-  - Calling gRPC for summarization
-  
-- All processing logic (transcript fetching, summarization, questions, images, cleaning) is handled by the Go microservice.
-
-- Redis is used for both caching results and queuing tasks for async processing.
-
-- Multiple worker instances can process tasks concurrently.
+```bash
+cd microservice
+go run cmd/grpc_server/server.go
+```
