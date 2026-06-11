@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package summarize;
+option go_package = "/summarize;summarize";
+
+service Summarize {
+    rpc SummarizeUrl(SummarizeUrlRequest) returns (SummarizeResponse) {}
+    rpc SummarizeText(SummarizeTextRequest) returns (SummarizeResponse) {}
+}
+
+message SummarizeUrlRequest {
+    string video_url = 1;
+    repeated string features = 2; // e.g., "Questions & Answers", "Flowchart & Diagrams"
+    string role = 3; // e.g., "FREE", "PRO", "PREMIUM"
+}
+
+message SummarizeTextRequest {
+    string text = 1;
+    repeated string features = 2; // e.g., "Questions & Answers", "Flowchart & Diagrams"
+    string role = 3; // e.g., "FREE", "PRO", "PREMIUM"
+}
+
+message SummarizeResponse {
+    string summary = 1;
+    string questions = 2; // JSON string or empty
+    string image_base64 = 3; // Base64 encoded image or empty
+    string error = 4; // Error message if any
+}

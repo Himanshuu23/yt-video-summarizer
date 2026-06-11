@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Next.js
+client/.next/
+client/out/
+
+# Build outputs
+dist/
+build/
+coverage/
+
+# Go
+microservice/bin/
+*.exe
+*.test
+*.out
+
+# Cache
+.cache/
+.parcel-cache/
+microservice/cache/
+
+# Prisma
+server/prisma/dev.db
+server/prisma/*.db
+server/prisma/*.db-journal
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Docker
+.docker/
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+
+# Runtime uploads (if any)
+uploads/
+
+# Generated files
+server/generated/
+
+# Local package locks (keep if you want reproducible builds)
+# Uncomment if you DON'T want lockfiles tracked
+# package-lock.json
+# **/package-lock.json
