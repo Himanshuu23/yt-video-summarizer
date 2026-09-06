@@ -15,7 +15,7 @@ import {
 } from "@/app/libs/demoData";
 
 /** Demo mode: skip backend; show hardcoded REST API summary after fake loading. */
-const DEMO_MODE = true;
+const DEMO_MODE = false;
 
 const Summarize = forwardRef<HTMLDivElement>(() => {
   // const { user } = useAuth();
