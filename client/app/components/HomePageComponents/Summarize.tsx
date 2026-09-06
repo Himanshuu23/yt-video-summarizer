@@ -25,6 +25,7 @@ const Summarize = forwardRef<HTMLDivElement>(() => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [isDemoMode, setIsDemoMode] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState<number | undefined>(
