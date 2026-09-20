@@ -1,5 +1,5 @@
 export const modalOverlay =
-  "fixed inset-0 backdrop-blur-sm bg-black/60 flex justify-center items-center z-50";
+  "fixed inset-0 backdrop-blur-sm bg-black/60 flex justify-center items-center z-50 overflow-y-auto p-4";
 
 export const modalPanel =
   "relative bg-black border border-white/25 rounded-2xl p-8 w-[90vw] sm:w-[420px] shadow-2xl";

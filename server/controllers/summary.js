@@ -27,8 +27,8 @@ const summarizeVideo = async (req, res) => {
     const videoUrl = normalizeVideoUrl(req.body.videoUrl);
     const { features, role } = req.body;
 
-    if (role && role.length < 3) {
-        return res.status(401).json({ error: "Login In to summarize" });
+    if (!role || String(role).length < 3) {
+        return res.status(401).json({ error: "Please sign in to summarize." });
     }
 
     if (!videoUrl) {
@@ -65,8 +65,8 @@ const summarizeText = async (req, res) => {
 
     const { role } = req.body;
 
-    if (role && role.length < 3) {
-        return res.status(401).json({ error: "Login In to summarize" });
+    if (!role || String(role).length < 3) {
+        return res.status(401).json({ error: "Please sign in to summarize." });
     }
 
     try {

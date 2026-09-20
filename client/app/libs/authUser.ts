@@ -1,5 +1,5 @@
 import { API_URL } from "./api";
-import { setCookie } from "./cookie";
+import { persistUser, toPublicUser } from "./handleToken";
 import { UserDataTypes } from "../types/user";
 
 export async function syncUserFromSession(
@@ -19,13 +19,7 @@ export async function syncUserFromSession(
   const result = await response.json();
   if (!result?.user?.email) return null;
 
-  const data: UserDataTypes = {
-    name: result.user.name,
-    email: result.user.email,
-    token: result.user.token,
-    role: result.user.role,
-  };
-
-  setCookie("user", JSON.stringify(data));
+  const data = toPublicUser(result.user);
+  persistUser(data);
   return data;
 }

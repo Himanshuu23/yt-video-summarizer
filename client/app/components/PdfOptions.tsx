@@ -5,10 +5,17 @@ import { PdfOptionsProps } from "../types/props";
 
 export default function PdfOptions({ summary, questions, imageBuffer, pdfUrl, generatePdf, handleThemeChange, pdfTheme, setCachedPdfs, setPreviewPdfUrl }: PdfOptionsProps) {
     const [isPdfVisible, setIsPdfVisible] = useState(false);
+    const [busy, setBusy] = useState(false);
 
-    const handlePdf = () => {
-        generatePdf(summary, questions, imageBuffer ?? "", pdfTheme, setCachedPdfs, setPreviewPdfUrl);
-        setIsPdfVisible(true);
+    const handlePdf = async () => {
+        if (busy) return;
+        setBusy(true);
+        try {
+          await generatePdf(summary, questions, imageBuffer ?? "", pdfTheme, setCachedPdfs, setPreviewPdfUrl);
+          setIsPdfVisible(true);
+        } finally {
+          setBusy(false);
+        }
     };
 
     return (
@@ -17,9 +24,10 @@ export default function PdfOptions({ summary, questions, imageBuffer, pdfUrl, ge
                 <p className="text-sm mb-2">Want to download the notes?</p>
                 <button
                   onClick={handlePdf}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+                  disabled={busy}
+                  className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50"
                 >
-                  {isPdfVisible ? "Regenerate PDF" : "Generate PDF"}
+                  {busy ? "Generating…" : isPdfVisible ? "Regenerate PDF" : "Generate PDF"}
                 </button>
               </div>
               {isPdfVisible && (

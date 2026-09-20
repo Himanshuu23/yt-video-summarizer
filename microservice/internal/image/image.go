@@ -56,6 +56,7 @@ func GenerateImage(prompt string) (string, error) {
 	}
 
 	if imageData, ok := result["image_data"].(string); ok {
+		// ImagePig already returns base64; pass it through unchanged.
 		return imageData, nil
 	}
 

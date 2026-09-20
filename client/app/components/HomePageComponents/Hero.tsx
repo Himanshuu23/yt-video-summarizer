@@ -21,12 +21,12 @@ export default function Hero({ heading, body, subheading1, subheading2, bg }: He
             <div className="absolute inset-0 backdrop-blur-md bg-black/30"></div>
           </div>
       
-          <div className="relative z-10 max-w-4xl px-4">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4">{heading}</h1>
-            <p className="text-base md:text-lg mb-8">{body}</p>
+          <div className="relative z-10 max-w-5xl px-4">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 tracking-wide">{heading}</h1>
+            <p className="text-lg md:text-2xl mb-10 text-white/90">{body}</p>
             <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 justify-center">
-              <a href="#video" className="px-6 py-3 bg-black/40 hover:bg-black/60 rounded-full text-sm">{subheading1}</a>
-              <a href="#notes" className="px-6 py-3 bg-white text-black hover:bg-gray-200 rounded-full text-sm">{subheading2}</a>
+              <a href="#video" className="px-8 py-4 bg-black/40 hover:bg-black/60 rounded-full text-base md:text-lg transition-colors">{subheading1}</a>
+              <a href="#notes" className="px-8 py-4 bg-white text-black hover:bg-gray-200 rounded-full text-base md:text-lg transition-colors">{subheading2}</a>
             </div>
           </div>
         </section>

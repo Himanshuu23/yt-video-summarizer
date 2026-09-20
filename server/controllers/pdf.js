@@ -35,9 +35,18 @@ const generatePdf = (req, res) => {
 
         if (buffer) { 
             try {
-                const decompressedBuffer = pako.inflate(Buffer.from(buffer, 'base64'), { to: 'string' });
-        
-                const imageBuffer = Buffer.from(decompressedBuffer, 'base64');
+                let raw = buffer;
+                if (typeof raw === 'string' && raw.includes(',')) {
+                    raw = raw.split(',').pop();
+                }
+
+                let imageBuffer;
+                try {
+                    const decompressedBuffer = pako.inflate(Buffer.from(raw, 'base64'), { to: 'string' });
+                    imageBuffer = Buffer.from(decompressedBuffer, 'base64');
+                } catch {
+                    imageBuffer = Buffer.from(raw, 'base64');
+                }
         
                 if (!imageBuffer || imageBuffer.length === 0) {
                     throw new Error('Invalid image buffer after decoding.');
@@ -49,12 +58,12 @@ const generatePdf = (req, res) => {
                 console.error('Error processing image:', err.message);
             }
         }
-        
 
-
-        doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text('Questions & Answers', { align: 'center' });
-        doc.moveDown();
-        doc.fontSize(12).fillColor(theme == 'dark' ? 'white' : 'black').text(questions);
+        if (questions) {
+            doc.fontSize(12).fillColor(theme === 'dark' ? 'white' : 'black').text('Questions & Answers', { align: 'center' });
+            doc.moveDown();
+            doc.fontSize(12).fillColor(theme == 'dark' ? 'white' : 'black').text(questions);
+        }
         doc.end();
 }
 

@@ -1,4 +1,7 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { signIn } from "next-auth/react";
 import { LoginModalProps } from "../types/props";
 import Login from "./Login";
@@ -30,7 +33,7 @@ export default function LoginModal({ session, closeModal, setIsLoggedIn, setUser
     }
   }, [session, getUserData]);
 
-  return (
+  return createPortal(
     <div className={modalOverlay} onClick={closeModal}>
       <div className={modalPanel} onClick={(e) => e.stopPropagation()}>
         <button
@@ -64,6 +67,7 @@ export default function LoginModal({ session, closeModal, setIsLoggedIn, setUser
           />
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

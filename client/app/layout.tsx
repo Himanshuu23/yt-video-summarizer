@@ -3,6 +3,7 @@ import "./globals.css";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import Providers from "./providers/Provider";
+import Toaster from "./components/Toaster";
 
 const NAME = "Summarify"
 
@@ -21,6 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-black">
         <Providers>
+          <Toaster />
           <Navbar name={NAME} />
             {children}
           <Footer />

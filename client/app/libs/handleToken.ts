@@ -1,4 +1,6 @@
 import { API_URL } from "./api";
+import { UserDataTypes } from "../types/user";
+import { setCookie } from "./cookie";
 
 const FEATURES = new Map([
     ["Questions & Answers", 40 ],
@@ -17,6 +19,22 @@ export function calculateTokenCost(features: string[]) {
     return cost
 }
 
+export function persistUser(user: UserDataTypes) {
+    setCookie("user", JSON.stringify(user));
+    if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("summarify-user", { detail: user }));
+    }
+}
+
+export function toPublicUser(data: { name: string; email: string; token: number; role: string }): UserDataTypes {
+    return {
+        name: data.name,
+        email: data.email,
+        token: data.token,
+        role: data.role,
+    };
+}
+
 export async function updateUserTokens(email: string, amount: number) {
     const response = await fetch(`${API_URL}/api/user/token`, {
       method: "PATCH",
@@ -25,4 +43,21 @@ export async function updateUserTokens(email: string, amount: number) {
     })
 
     return response
+}
+
+export async function consumeFeatureTokens(
+    user: UserDataTypes,
+    features: string[],
+    setUser: (user: UserDataTypes) => void
+) {
+    const cost = calculateTokenCost(features);
+    if (cost <= 0 || !user.email) return;
+
+    const response = await updateUserTokens(user.email, -cost);
+    if (!response.ok) return;
+
+    const data = await response.json();
+    const next = toPublicUser(data);
+    persistUser(next);
+    setUser(next);
 }

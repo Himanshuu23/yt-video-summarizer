@@ -1,14 +1,19 @@
 import { ThemeType } from "../types/theme";
-import { getCookie, setCookie } from "./cookie";
+import { getCookie } from "./cookie";
 import { handleError } from "./handleError";
-import { calculateTokenCost, updateUserTokens } from "./handleToken";
+import { calculateTokenCost, persistUser, toPublicUser, updateUserTokens } from "./handleToken";
 import { API_URL } from "./api";
+import { readApiError } from "./apiError";
 
 export async function generatePdf(response: string, questions: string, buffer: string, pdfTheme: string, setCachedPdfs: (pdf: (prev: ThemeType) => ThemeType) => void
 , setPreviewPdfUrl: (url: string) => void) {
   try {
     const cookie = getCookie("user");
-    const user = JSON.parse(cookie || "");
+    if (!cookie) {
+      throw new Error("Please sign in to generate a PDF.");
+    }
+
+    const user = JSON.parse(cookie);
     const email = user.email;
     const role = user.role;
 
@@ -18,8 +23,8 @@ export async function generatePdf(response: string, questions: string, buffer: s
       PREMIUM: 1 * 1024 * 1024
     };
 
-    if (buffer.length > (bufferSizeLimit[role] || bufferSizeLimit["user"])) {
-      throw new Error("File size exceeds limit for your role");
+    if (buffer && buffer.length > (bufferSizeLimit[role] || bufferSizeLimit.FREE)) {
+      throw new Error("File size exceeds limit for your plan.");
     }
 
     const res = await fetch(`${API_URL}/api/pdf`, {
@@ -28,21 +33,25 @@ export async function generatePdf(response: string, questions: string, buffer: s
       headers: { "Content-type": "application/json" }
     });
 
-    if (!res.ok) throw new Error("Failed to generate PDF");
+    if (!res.ok) {
+      throw new Error(await readApiError(res, "Failed to generate PDF"));
+    }
 
     const blob = await res.blob();
     const url = window.URL.createObjectURL(blob);
 
     const totalCost: number = calculateTokenCost(["Generate Pdf"]) || 35;
     const newResponse = await updateUserTokens(email, (-1 * totalCost));
-    const newResult = await newResponse.json();
+    if (newResponse.ok) {
+      const newResult = await newResponse.json();
+      persistUser(toPublicUser(newResult));
+    }
 
-    setCookie("user", JSON.stringify({ name: newResult.name, email: newResult.email, token: newResult.token, role: newResult.role }));
     setCachedPdfs((prev) => ({ ...prev, [pdfTheme]: url }));
     setPreviewPdfUrl(url);
     return url;
   } catch (error) {
-    console.log(error)
-    handleError("Their was an error while generating pdf. Please try again in a while.");
+    const message = error instanceof Error ? error.message : "There was an error while generating the PDF.";
+    handleError(message);
   }
 }

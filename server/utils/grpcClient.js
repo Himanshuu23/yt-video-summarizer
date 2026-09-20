@@ -55,8 +55,8 @@ async function summarizeUrl(videoUrl, features, role) {
                 } else {
                     resolve({
                         summary: response.summary,
-                        questions: response.questions || null,
-                        buffer: response.image_base64 ? Array.from(Buffer.from(response.image_base64, 'base64')) : null
+                        questions: response.questions || "",
+                        buffer: response.image_base64 || "",
                     });
                 }
             }
@@ -82,8 +82,8 @@ async function summarizeText(text, features, role) {
                 } else {
                     resolve({
                         summary: response.summary,
-                        questions: response.questions || null,
-                        buffer: response.image_base64 ? Array.from(Buffer.from(response.image_base64, 'base64')) : null
+                        questions: response.questions || "",
+                        buffer: response.image_base64 || "",
                     });
                 }
             }

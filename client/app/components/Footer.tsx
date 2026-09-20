@@ -17,14 +17,14 @@ export default function Footer() {
           </a>
         </p>
         <div className="flex justify-center space-x-6">
+          <a target='_blank' href="https://github.com/Himanshuu23/yt-video-summarizer" className="text-gray-400 hover:text-white" aria-label="GitHub">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.63 0-12 5.37-12 12 0 5.3 3.438 9.8 8.205 11.385.6.113.82-.255.82-.57 0-.28-.01-1.02-.015-2.005-3.338.725-4.042-1.61-4.042-1.61-.546-1.385-1.332-1.755-1.332-1.755-1.086-.744.084-.729.084-.729 1.2.084 1.835 1.234 1.835 1.234 1.067 1.83 2.804 1.3 3.49.995.108-.773.42-1.302.762-1.602-2.665-.305-5.467-1.335-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.124-.305-.535-1.53.115-3.18 0 0 1.005-.32 3.3 1.22.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.54 3.285-1.22 3.285-1.22.655 1.65.245 2.875.12 3.18.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.37.81 1.1.81 2.22 0 1.6-.015 2.88-.015 3.27 0 .315.21.69.825.57 4.755-1.585 8.205-6.085 8.205-11.385 0-6.63-5.37-12-12-12z" />
+            </svg>
+          </a>
           <a target='_blank' href="https://x.com/hiimaaanshuuuu" className="text-gray-400 hover:text-white" aria-label="Twitter">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
               <path d="M23.954 4.569c-.885.39-1.83.654-2.825.775 1.014-.611 1.794-1.574 2.163-2.723-.949.564-2.007.974-3.127 1.195-.897-.959-2.178-1.555-3.594-1.555-2.72 0-4.924 2.203-4.924 4.917 0 .39.045.765.127 1.124-4.09-.205-7.72-2.165-10.148-5.144-.424.729-.666 1.571-.666 2.475 0 1.708.87 3.213 2.188 4.096-.807-.026-1.566-.248-2.228-.616v.062c0 2.385 1.693 4.374 3.946 4.827-.413.111-.849.171-1.296.171-.317 0-.626-.03-.928-.086.627 1.956 2.444 3.379 4.6 3.419-1.68 1.319-3.809 2.107-6.102 2.107-.396 0-.788-.023-1.174-.067 2.179 1.397 4.768 2.213 7.548 2.213 9.056 0 14.009-7.504 14.009-14.008 0-.21-.006-.423-.015-.633.961-.689 1.796-1.56 2.457-2.548l-.047-.02z" />
-            </svg>
-          </a>
-          <a target='_blank' href="https://github.com/Himanshuu23" className="text-gray-400 hover:text-white" aria-label="GitHub">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0c-6.63 0-12 5.37-12 12 0 5.3 3.438 9.8 8.205 11.385.6.113.82-.255.82-.57 0-.28-.01-1.02-.015-2.005-3.338.725-4.042-1.61-4.042-1.61-.546-1.385-1.332-1.755-1.332-1.755-1.086-.744.084-.729.084-.729 1.2.084 1.835 1.234 1.835 1.234 1.067 1.83 2.804 1.3 3.49.995.108-.773.42-1.302.762-1.602-2.665-.305-5.467-1.335-5.467-5.93 0-1.31.465-2.38 1.235-3.22-.124-.305-.535-1.53.115-3.18 0 0 1.005-.32 3.3 1.22.96-.267 1.98-.4 3-.405 1.02.005 2.04.138 3 .405 2.28-1.54 3.285-1.22 3.285-1.22.655 1.65.245 2.875.12 3.18.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.37.81 1.1.81 2.22 0 1.6-.015 2.88-.015 3.27 0 .315.21.69.825.57 4.755-1.585 8.205-6.085 8.205-11.385 0-6.63-5.37-12-12-12z" />
             </svg>
           </a>
           <a href="#" target='_blank' className="text-gray-400 hover:text-white" aria-label="Discord">
@@ -36,10 +36,8 @@ export default function Footer() {
         <div>
           <p className="font-bold text-gray-400 text-sm">HELPFUL LINKS</p>
           <div className="flex justify-center space-x-4 mt-2">
-            <Link legacyBehavior href="#">
-              <a className="text-gray-400 hover:text-white text-sm">Docs</a>
-            </Link>
-            <Link legacyBehavior href="#">
+            <a href="https://himanshusagar.vercel.app/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white text-sm">Docs</a>
+            <Link legacyBehavior href="/pricing">
               <a className="text-gray-400 hover:text-white text-sm">Pricing</a>
             </Link>
             <Link legacyBehavior href="#">

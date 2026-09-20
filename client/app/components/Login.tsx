@@ -1,39 +1,55 @@
-import { setCookie } from "../libs/cookie";
+"use client";
+
+import { persistUser, toPublicUser } from "../libs/handleToken";
 import { API_URL } from "../libs/api";
 import { LoginProps } from "../types/props";
 import Email from "./EmailInput";
 import GithubLogo from "./logos/Github";
 import GoogleLogo from "./logos/Google";
 import { modalTitle, modalDivider, modalInput, modalPrimaryButton, modalLink, oauthButton } from "../libs/modalStyles";
+import { useState } from "react";
+import { readApiError } from "../libs/apiError";
 
 export default function Login({ email, password, setEmail, setPassword, handleLogin, setShowSignUp, closeModal, setIsLoggedIn, setUserData }: LoginProps) {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function loginUser(email: string, password: string) {
-    const res = await fetch(`${API_URL}/api/user?email=${email}&password=${password}`, {
-      method: "GET",
-    })
+    setError("");
+    if (!email || !password) {
+      setError("Email and password are required.");
+      return;
+    }
 
-    const result = await res.json();
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/api/user?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
+        method: "GET",
+      });
 
-    if (result?.error || !result?.user) return;
+      if (!res.ok) {
+        setError(await readApiError(res, "Invalid email or password."));
+        return;
+      }
 
-    setIsLoggedIn(true)
-    setUserData({
-      name: result.user.name,
-      email: result.user.email,
-      token: result.user.token,
-      role: result.user.role,
-    })
-    setCookie("user", JSON.stringify({
-      name: result.user.name,
-      email: result.user.email,
-      token: result.user.token,
-      role: result.user.role,
-    }))
+      const result = await res.json();
+      if (result?.error || !result?.user) {
+        setError(typeof result.error === "string" ? result.error : "Invalid email or password.");
+        return;
+      }
 
-    setEmail("");
-    setPassword("");
-    closeModal();
+      const data = toPublicUser(result.user);
+      persistUser(data);
+      setUserData(data);
+      setIsLoggedIn(true);
+      setEmail("");
+      setPassword("");
+      closeModal();
+    } catch {
+      setError("Could not reach the server. Is the backend running?");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -57,8 +73,9 @@ export default function Login({ email, password, setEmail, setPassword, handleLo
           placeholder="Password"
           className={modalInput}
         />
-        <button onClick={() => loginUser(email, password)} className={modalPrimaryButton} type="button">
-          Login
+        {error && <p className="text-sm text-red-400">{error}</p>}
+        <button onClick={() => loginUser(email, password)} className={modalPrimaryButton} type="button" disabled={loading}>
+          {loading ? "Signing in…" : "Login"}
         </button>
       </div>
       <button onClick={() => setShowSignUp(true)} className={modalLink} type="button">

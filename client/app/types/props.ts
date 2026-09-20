@@ -15,10 +15,7 @@ export interface SummaryProps {
   closeModal: () => void;
   summary: string;
   questions: string;
-  isDemoMode?: boolean;
-  demoVideoUrl?: string;
-  loadingProgress?: number;
-  loadingMessage?: string;
+  loading: boolean;
   imageBuffer?: string;
   pdfUrl: string | null;
   handleThemeChange: (theme: string) => void;
@@ -36,6 +33,7 @@ export interface SummaryProps {
   setCachedPdfs: (updater: (prev: ThemeType) => ThemeType) => void;
   setPreviewPdfUrl: (url: string) => void;
   handleLanguageChange: (language: string) => void;
+  selectedFeatures: string[];
 }
 
 export interface NavProps {
@@ -53,6 +51,7 @@ export interface SpeechProps {
   summary: string;
   questions: string;
   selectedLanguage?: string;
+  imageSrc?: string | null;
 }
 
 export interface PdfOptionsProps {
@@ -94,10 +93,8 @@ export interface LayoutProps {
   setIsModalOpen: (currentState: boolean) => void;
   errorMessage: string;
   setSelectedFeatures: (features: string[]) => void;
-  isDemoMode?: boolean;
-  demoVideoUrl?: string;
-  loadingProgress?: number;
-  loadingMessage?: string;
+  selectedFeatures: string[];
+  isSubmitting?: boolean;
 }
 
 export interface LoginProps {

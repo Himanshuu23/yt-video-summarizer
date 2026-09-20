@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/base64"
 	"log"
 	"microservice/internal/envload"
 	"microservice/internal/cleaner"
@@ -84,8 +83,7 @@ func (s *server) SummarizeUrl(ctx context.Context, req *summarize.SummarizeUrlRe
 		if err != nil {
 			log.Printf("Error generating image: %v", err)
 		} else {
-			// Compress and encode to base64
-			imageBase64 = base64.StdEncoding.EncodeToString([]byte(imageData))
+			imageBase64 = imageData
 		}
 	}
 
@@ -132,8 +130,7 @@ func (s *server) SummarizeText(ctx context.Context, req *summarize.SummarizeText
 		if err != nil {
 			log.Printf("Error generating image: %v", err)
 		} else {
-			// Compress and encode to base64
-			imageBase64 = base64.StdEncoding.EncodeToString([]byte(imageData))
+			imageBase64 = imageData
 		}
 	}
 
