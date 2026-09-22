@@ -2,6 +2,66 @@ const pdfParse = require('pdf-parse');
 const fetchTranscript = require('../lib/transcript');
 const { summarizeText: summarizeTextGrpc } = require('../utils/grpcClient');
 
+function getSafeError(error) {
+    const message = String(error?.message || "").toLowerCase();
+   
+    if (error?.code === "TRANSCRIPT_TOO_LARGE") {
+        return {
+            status: 413,
+            message: "This video is too long for your current plan.",
+        };
+    }
+
+    if (error?.code === "TRANSCRIPT_UNAVAILABLE") {
+        return {
+            status: 422,
+            message: "Unable to retrieve captions for this video. Please try another video.",
+        };
+    }
+
+    if (
+        message.includes("transcript") ||
+        message.includes("caption") ||
+        message.includes("subtitles")
+    ) {
+        return {
+            status: 422,
+            message: "Unable to retrieve captions for this video. Please try another video.",
+        };
+    }
+
+    if (
+        message.includes("huggingface") ||
+        message.includes("hugging face") ||
+        message.includes("fetch failed") ||
+        message.includes("enotfound") ||
+        message.includes("econnrefused") ||
+        message.includes("timeout") ||
+        message.includes("grpc")
+    ) {
+        return {
+            status: 503,
+            message: "Our AI service is temporarily unavailable. Please try again later.",
+        };
+    }
+
+    if (
+        message.includes("pdf") ||
+        message.includes("invalid") ||
+        message.includes("parse")
+    ) {
+        return {
+            status: 400,
+            message: "Unable to read this document. Please upload a valid PDF.",
+        };
+    }
+
+    return {
+        status: 500,
+        message: "Something went wrong while generating your summary. Please try again.",
+    };
+}
+
 const extractTextFromDocument = (fileBuffer) => {
     return new Promise((resolve, reject) => {
         pdfParse(fileBuffer)
@@ -45,7 +105,9 @@ const summarizeVideo = async (req, res) => {
         const result = await summarizeTextGrpc(transcript, features || [], role || 'FREE');
 
         if (!result?.summary?.trim()) {
-            return res.status(500).json({ error: 'Summarization failed. Check Hugging Face API keys in backend/.env' });
+            console.error("[summarizeVideo] Empty summary returned by summarizer");
+
+            return res.status(503).json({ error: "Our AI service is temporarily unavailable. Please try again later.", });
         }
 
         res.json({
@@ -54,7 +116,11 @@ const summarizeVideo = async (req, res) => {
             buffer: result.buffer,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("[summarizeVideo]", error);
+        
+        const safeError = getSafeError(error);
+
+        return res.status(safeError.status).json({ error: safeError.message, });
     }
 };
 
@@ -77,7 +143,11 @@ const summarizeText = async (req, res) => {
         const result = await summarizeTextGrpc(extractedText, features, role || 'FREE');
 
         if (!result?.summary?.trim()) {
-            return res.status(500).json({ error: 'Summarization failed.' });
+            console.error("[summarizeText] Empty summary returned by summarizer");
+
+            return res.status(503).json({
+                error: "Our AI service is temporarily available. Please try again later.",
+            });
         }
 
         res.json({
@@ -86,7 +156,11 @@ const summarizeText = async (req, res) => {
             buffer: result.buffer,
         });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("[summarizeText]", error);
+
+        const safeError = getSafeError(error);
+
+        return res.status(safeError.status).json({ error: safeError.message, });
     }
 };
 

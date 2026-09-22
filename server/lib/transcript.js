@@ -8,9 +8,11 @@ const TRANSCRIPT_SIZE_LIMIT = {
 
 function extractVideoId(videoUrl) {
   const input = String(videoUrl).trim();
+
   const match = input.match(
     /(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/\s]{11})/i
   );
+
   return match ? match[1] : input;
 }
 
@@ -25,34 +27,55 @@ async function fetchTranscriptForVideo(videoUrl, role) {
     retryDelay: 1000,
   };
 
-  let lastError = null;
-
   for (const lang of langsToTry) {
     try {
-      const config = lang ? { ...configBase, lang } : { ...configBase };
+      const config = lang
+        ? { ...configBase, lang }
+        : { ...configBase };
+
       const segments = await fetchTranscript(videoId, config);
-      const fullTranscript = toPlainText(segments, " ").replace(/\s+/g, " ").trim();
+
+      const fullTranscript = toPlainText(segments, " ")
+        .replace(/\s+/g, " ")
+        .trim();
 
       if (!fullTranscript) continue;
 
-      const limit = TRANSCRIPT_SIZE_LIMIT[role] || TRANSCRIPT_SIZE_LIMIT.FREE;
+      const limit =
+        TRANSCRIPT_SIZE_LIMIT[role] || TRANSCRIPT_SIZE_LIMIT.FREE;
+
+      // TRANSCRIPT TOO LONG
       if (fullTranscript.length > limit) {
-        throw new Error("Transcript size exceeds limit for your role");
+        const error = new Error(
+          "This transcript is too long for your current plan."
+        );
+
+        error.code = "TRANSCRIPT_TOO_LARGE";
+        throw error;
       }
 
       return fullTranscript;
     } catch (error) {
-      lastError = error;
       console.error(
         `Transcript fetch failed (${lang || "default"}):`,
         error.message
       );
+
+      // Do not continue trying other languages for this error
+      if (error.code === "TRANSCRIPT_TOO_LARGE") {
+        throw error;
+      }
     }
   }
 
-  throw new Error(
-    lastError?.message || "Failed to fetch transcript for this video."
+  // No transcript found in any attempted language
+  const error = new Error(
+    "Unable to retrieve captions for this video."
   );
+
+  error.code = "TRANSCRIPT_UNAVAILABLE";
+
+  throw error;
 }
 
 module.exports = fetchTranscriptForVideo;
