@@ -49,7 +49,7 @@ export default function Pricing() {
         </p>
       </div>
       <p className="mx-auto mt-6 max-w-2xl text-pretty text-center text-lg font-medium text-gray-400 sm:text-xl/8">
-        Simulated billing for this project — unlock tokens instantly, no Stripe or Razorpay required.
+        Choose a plan that fits your needs and unlock more summarization tokens.
       </p>
       <div className="mx-auto mt-16 grid max-w-[80rem] grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {(Object.keys(PLAN_DETAILS) as Array<keyof typeof PLAN_DETAILS>).map((id) => {

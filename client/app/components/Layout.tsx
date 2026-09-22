@@ -97,7 +97,7 @@ export default function Layout({
   }
 
   return (
-  <div id={type === 1 ? "video" : "notes"} className={`min-h-screen w-screen bg-black overflow-x-hidden flex ${type === 2 ? 'my-0' : 'my-24'} flex-col md:flex-row`}>
+  <div id={type === 1 ? "video" : "notes"} className="min-h-0 w-full bg-black overflow-x-hidden flex flex-col md:flex-row">
     {type === 2 ? (
       <>
         <div className="w-full md:w-2/5 min-h-[280px] md:h-auto flex items-center justify-center relative mt-8 md:mt-0 md:ml-14">

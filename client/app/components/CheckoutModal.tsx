@@ -129,9 +129,6 @@ export default function CheckoutModal({
           <p className="mt-1 text-sm text-gray-400">
             {details.name} · {details.priceLabel}/month · +{details.tokens} tokens
           </p>
-          <p className="mt-2 text-xs text-amber-200/80">
-            Simulated checkout — no real charge. Card details never leave this browser.
-          </p>
 
           {receipt ? (
             <div className="mt-6 rounded-xl border border-emerald-400/30 bg-emerald-950/40 p-4 text-sm text-emerald-100">
@@ -214,7 +211,7 @@ export default function CheckoutModal({
                 Pay {details.priceLabel}
               </button>
               <p className="text-[11px] text-center text-white/35">
-                Test card {DEMO_CARD} · any future expiry · any CVC
+                Secure checkout · Payment verification required
               </p>
             </form>
           )}
