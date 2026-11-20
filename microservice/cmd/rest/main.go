@@ -3,9 +3,8 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"microservice/internal/envload"
 	"microservice/cache"
-	"microservice/grpc_client"
+	"microservice/internal/envload"
 	"microservice/worker/tasks"
 	"net/http"
 	"os"
