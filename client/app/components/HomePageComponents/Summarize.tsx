@@ -5,6 +5,7 @@ import Layout from "../Layout";
 import { consumeFeatureTokens } from "@/app/libs/handleToken";
 import { ErrorType } from "@/app/types/error";
 import { API_URL } from "@/app/libs/api";
+import { authHeaders } from "@/app/libs/authHeaders";
 import { useAuth } from "@/app/contexts/AuthContext";
 import { isYouTubeUrl } from "@/app/libs/youtubeUrl";
 import { readApiError } from "@/app/libs/apiError";
@@ -53,9 +54,8 @@ const Summarize = forwardRef<HTMLDivElement>(() => {
         body: JSON.stringify({
           videoUrl: url.trim(),
           features: selectedFeatures,
-          role: user.role || "FREE",
         }),
-        headers: { "Content-type": "application/json" },
+        headers: await authHeaders({ "Content-type": "application/json" }),
       });
 
       if (response.status === 429) {

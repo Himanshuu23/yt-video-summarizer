@@ -3,6 +3,7 @@ import { getCookie } from "./cookie";
 import { handleError } from "./handleError";
 import { calculateTokenCost, persistUser, toPublicUser, updateUserTokens } from "./handleToken";
 import { API_URL } from "./api";
+import { authHeaders } from "./authHeaders";
 import { readApiError } from "./apiError";
 
 export async function generatePdf(response: string, questions: string, buffer: string, pdfTheme: string, setCachedPdfs: (pdf: (prev: ThemeType) => ThemeType) => void
@@ -30,7 +31,7 @@ export async function generatePdf(response: string, questions: string, buffer: s
     const res = await fetch(`${API_URL}/api/pdf`, {
       method: "POST",
       body: JSON.stringify({ summary: response, theme: pdfTheme, questions, buffer }),
-      headers: { "Content-type": "application/json" }
+      headers: await authHeaders({ "Content-type": "application/json" })
     });
 
     if (!res.ok) {

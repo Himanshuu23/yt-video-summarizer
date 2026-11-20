@@ -108,6 +108,9 @@ services:
       - GRPC_SERVER_ADDR=grpc-server:8000
       - DATABASE_URL=${DATABASE_URL}
       - NODE_ENV=production
+      - JWT_SECRET=${JWT_SECRET}
+      - INTERNAL_API_SECRET=${INTERNAL_API_SECRET}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000}
     networks:
       - appnet
     ports:
@@ -125,6 +128,8 @@ services:
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=http://backend:9000
+      - INTERNAL_API_URL=http://backend:9000
+      - INTERNAL_API_SECRET=${INTERNAL_API_SECRET}
     networks:
       - appnet
     ports:

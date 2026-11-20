@@ -1,6 +1,7 @@
 import { API_URL } from "./api";
 import { UserDataTypes } from "../types/user";
 import { setCookie } from "./cookie";
+import { authHeaders } from "./authHeaders";
 
 const FEATURES = new Map([
     ["Questions & Answers", 40 ],
@@ -38,8 +39,8 @@ export function toPublicUser(data: { name: string; email: string; token: number;
 export async function updateUserTokens(email: string, amount: number) {
     const response = await fetch(`${API_URL}/api/user/token`, {
       method: "PATCH",
-      body: JSON.stringify({ email: email, amount: amount }),
-      headers: { "Content-Type": "application/json" }
+      body: JSON.stringify({ amount: amount }),
+      headers: await authHeaders({ "Content-Type": "application/json" })
     })
 
     return response

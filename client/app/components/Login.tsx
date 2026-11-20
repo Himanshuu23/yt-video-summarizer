@@ -2,6 +2,8 @@
 
 import { persistUser, toPublicUser } from "../libs/handleToken";
 import { API_URL } from "../libs/api";
+import { AUTH_COOKIE } from "../libs/authHeaders";
+import { setCookie } from "../libs/cookie";
 import { LoginProps } from "../types/props";
 import Email from "./EmailInput";
 import GithubLogo from "./logos/Github";
@@ -23,8 +25,10 @@ export default function Login({ email, password, setEmail, setPassword, handleLo
 
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/user?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`, {
-        method: "GET",
+      const res = await fetch(`${API_URL}/api/user/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
       });
 
       if (!res.ok) {
@@ -38,6 +42,7 @@ export default function Login({ email, password, setEmail, setPassword, handleLo
         return;
       }
 
+      if (result.accessToken) setCookie(AUTH_COOKIE, result.accessToken);
       const data = toPublicUser(result.user);
       persistUser(data);
       setUserData(data);

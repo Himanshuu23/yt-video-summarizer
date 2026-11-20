@@ -32,6 +32,7 @@ export default function Profile({
   function handleLogout() {
     signOut({ callbackUrl: window.location.origin });
     Cookies.remove("user", { path: "/" });
+    Cookies.remove("auth_token", { path: "/" });
     onLogout?.();
     setIsOpen(false);
   }

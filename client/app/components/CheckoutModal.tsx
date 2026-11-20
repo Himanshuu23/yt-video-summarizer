@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { API_URL } from "../libs/api";
+import { authHeaders } from "../libs/authHeaders";
 import { PLAN_DETAILS, PaidPlanId } from "../libs/plans";
 import {
   DEMO_CARD,
@@ -85,8 +86,8 @@ export default function CheckoutModal({
 
       const res = await fetch(`${API_URL}/api/user/checkout`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user.email, plan }),
+        headers: await authHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify({ plan }),
       });
 
       if (!res.ok) {

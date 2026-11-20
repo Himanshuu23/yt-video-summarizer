@@ -14,6 +14,7 @@ import { UserDataTypes } from "../types/user";
 import { getCookie, removeCookie } from "../libs/cookie";
 import { persistUser } from "../libs/handleToken";
 import { syncUserFromSession } from "../libs/authUser";
+import { AUTH_COOKIE } from "../libs/authHeaders";
 
 type AuthContextValue = {
   user: UserDataTypes | null;
@@ -51,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const clearUser = useCallback(() => {
     setUserState(null);
     removeCookie("user");
+    removeCookie(AUTH_COOKIE);
   }, []);
 
   useEffect(() => {

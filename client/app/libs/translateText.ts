@@ -1,12 +1,13 @@
 import { handleError } from "./handleError";
 import { API_URL } from "./api";
+import { authHeaders } from "./authHeaders";
 
 export async function translate(language: string, text: string) {
     try {
       const res = await fetch(`${API_URL}/api/translate`, {
         method: "POST",
         body: JSON.stringify({ text, lang: language }),
-        headers: { "Content-type": "application/json" },
+        headers: await authHeaders({ "Content-type": "application/json" }),
       });
   
       if (!res.ok) throw new Error("Translation failed");

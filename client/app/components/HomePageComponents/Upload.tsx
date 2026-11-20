@@ -1,20 +1,21 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import Layout from "../Layout";
+import { consumeFeatureTokens } from "@/app/libs/handleToken";
 import { ErrorType } from "@/app/types/error";
 import { API_URL } from "@/app/libs/api";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { consumeFeatureTokens } from "@/app/libs/handleToken";
+import { isYouTubeUrl } from "@/app/libs/youtubeUrl";
 import { readApiError } from "@/app/libs/apiError";
 
-export default function UploadComponent() {
+const Summarize = forwardRef<HTMLDivElement>(() => {
   const { user, setUser } = useAuth();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  const [file, setFile] = useState<File | null>(null);
   const [response, setResponse] = useState<string>("");
   const [questions, setQuestions] = useState<string>("");
   const [imageBuffer, setImageBuffer] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [url, setUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,13 +29,13 @@ export default function UploadComponent() {
       return;
     }
 
-    if (!file) {
-      setError("Please upload a PDF file.");
+    if (!url.trim()) {
+      setError("Please enter a YouTube URL first.");
       return;
     }
 
-    if (file.type !== "application/pdf") {
-      setError("Only PDF files are supported.");
+    if (!isYouTubeUrl(url)) {
+      setError("Please paste a valid YouTube URL.");
       return;
     }
 
@@ -47,25 +48,25 @@ export default function UploadComponent() {
     setIsSubmitting(true);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("features", JSON.stringify(selectedFeatures));
-      formData.append("role", user.role || "FREE");
-
-      const res = await fetch(`${API_URL}/api/summarize/file`, {
+      const response = await fetch(`${API_URL}/api/summarize/url`, {
         method: "POST",
-        body: formData,
+        body: JSON.stringify({
+          videoUrl: url.trim(),
+          features: selectedFeatures,
+          role: user.role || "FREE",
+        }),
+        headers: { "Content-type": "application/json" },
       });
 
-      if (res.status === 429) {
-        throw new Error(await readApiError(res, "You're summarizing too quickly. Please wait a moment and try again."));
+      if (response.status === 429) {
+        throw new Error(await readApiError(response, "You're summarizing too quickly. Please wait a moment and try again."));
       }
 
-      if (!res.ok) {
-        throw new Error(await readApiError(res, "Server is busy. Please try again later."));
+      if (!response.ok) {
+        throw new Error(await readApiError(response, "Server is busy. Please try again in a while."));
       }
 
-      const data = await res.json() as {
+      const data = await response.json() as {
         error?: string;
         summary?: string;
         questions?: string;
@@ -73,7 +74,7 @@ export default function UploadComponent() {
       };
 
       if (!data.summary?.trim()) {
-        throw new Error(data.error || "No summary was returned from this document.");
+        throw new Error(data.error || "No summary was returned. Try another video with captions enabled.");
       }
 
       setResponse(data.summary);
@@ -91,25 +92,28 @@ export default function UploadComponent() {
 
   return (
     <Layout
-      title1="Making Long Notes Short"
-      title2="Light Work"
-      subtitle="Upload your document or book to receive summarized notes highlighting key points, available in multiple formats, and complemented with related questions to enhance understanding and retention."
-      imageUrl="/hero-2.png"
+      title1="Youtube Video Summaries"
+      title2="in a Flash"
+      subtitle="Generating notes in multiple themes to download in PDF format, available in multiple languages, and generating related questions for a deeper understanding."
+      imageUrl="/hero-1.png"
       response={response}
       questions={questions}
       imageBuffer={imageBuffer}
-      fileUrl={file}
+      url={url}
       setQuestions={setQuestions}
       setResponse={setResponse}
-      setFileUrl={setFile}
+      setUrl={setUrl}
       handleSubmit={handleSubmit}
       isModalOpen={isModalOpen}
       setIsModalOpen={setIsModalOpen}
-      type={2}
+      type={1}
       errorMessage={error}
       setSelectedFeatures={setSelectedFeatures}
       selectedFeatures={selectedFeatures}
       isSubmitting={isSubmitting}
     />
   );
-}
+});
+
+Summarize.displayName = "Summarize";
+export default Summarize;

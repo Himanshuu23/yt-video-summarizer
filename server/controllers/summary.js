@@ -85,11 +85,8 @@ function normalizeVideoUrl(videoUrl) {
 
 const summarizeVideo = async (req, res) => {
     const videoUrl = normalizeVideoUrl(req.body.videoUrl);
-    const { features, role } = req.body;
-
-    if (!role || String(role).length < 3) {
-        return res.status(401).json({ error: "Please sign in to summarize." });
-    }
+    const { features } = req.body;
+    const role = req.user.role; // from the database via requireAuth, never from the request body
 
     if (!videoUrl) {
         return res.status(400).json({ error: 'YouTube video URL is required.' });
@@ -129,11 +126,7 @@ const summarizeText = async (req, res) => {
         return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const { role } = req.body;
-
-    if (!role || String(role).length < 3) {
-        return res.status(401).json({ error: "Please sign in to summarize." });
-    }
+    const role = req.user.role; // from the database via requireAuth, never from the request body
 
     try {
         const features = JSON.parse(req.body.features || "[]");
