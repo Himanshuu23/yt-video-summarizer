@@ -97,19 +97,19 @@ export default function Layout({
   }
 
   return (
-  <div id={type === 1 ? "video" : "notes"} className="min-h-0 w-full bg-black overflow-x-hidden flex flex-col md:flex-row">
+  <section id={type === 1 ? "video" : "notes"} className="scroll-mt-24 w-full bg-black py-16 md:py-24">
+    <div className="mx-auto flex w-full max-w-6xl flex-col items-center md:flex-row">
     {type === 2 ? (
       <>
-        <div className="w-full md:w-2/5 min-h-[280px] md:h-auto flex items-center justify-center relative mt-8 md:mt-0 md:ml-14">
+        <div className="relative h-64 w-full shrink-0 md:h-96 md:w-2/5">
           <Image
-            style={{ transform: 'scale(115%)' }}
             fill
             src={imageUrl}
-            alt="Background"
-            className="object-contain max-h-full max-w-full"
+            alt=""
+            className="object-contain"
           />
         </div>
-        <form onSubmit={handleSubmit} className="flex flex-col justify-center p-8 w-full md:w-1/2">
+        <form onSubmit={handleSubmit} className="flex w-full flex-col justify-center p-8 md:w-1/2">
           <h1 className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}>
             {title1}
             <br />
@@ -123,7 +123,7 @@ export default function Layout({
           <input
             type="file"
             accept="application/pdf"
-            id="url"
+            id="pdf-file"
             onChange={(e) => {if (setFileUrl) setFileUrl(e.target.files?.[0] ?? null)}}
             className="w-full mt-16 md:w-1/2 bg-transparent text-white text-lg border border-slate-200 rounded-md px-4 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow-md"
           />
@@ -143,7 +143,7 @@ export default function Layout({
       </>
     ) : (
       <>
-        <form onSubmit={handleSubmit} className="flex flex-col justify-center p-8 w-full md:w-1/2">
+        <form onSubmit={handleSubmit} className="flex w-full flex-col justify-center p-8 md:w-1/2">
           <h1 className={`${poppins.className} mb-4 text-3xl font-extrabold text-gray-900 dark:text-white md:text-5xl lg:text-6xl tracking-wide`}>
             {title1}
             <br />
@@ -157,7 +157,7 @@ export default function Layout({
           <input
             placeholder="Paste a YouTube link…"
             type="text"
-            id="url"
+            id="video-url"
             value={url ? url : ""}
             onChange={(e) => { if (setUrl) setUrl(e.target.value)}}
             className="w-full md:w-1/2 mt-16 bg-transparent placeholder:text-white/50 text-white text-lg border border-slate-200 rounded-md px-4 py-2 focus:outline-none focus:border-slate-400 hover:border-slate-300 shadow-sm focus:shadow-md"
@@ -175,17 +175,17 @@ export default function Layout({
             {isSubmitting ? "Summarizing…" : "Summarize"}
           </button>
         </form>
-        <div className="w-full md:w-2/5 min-h-[280px] md:min-h-[520px] flex items-center justify-center relative mt-8 md:mt-0 md:ml-14">
+        <div className="relative mt-8 h-64 w-full shrink-0 md:mt-0 md:h-96 md:w-2/5">
           <Image
-            style={{ transform: 'scale(115%)' }}
             fill
             src={imageUrl}
-            alt="Background"
-            className="object-contain max-h-full max-w-full"
+            alt=""
+            className="object-contain"
           />
         </div>
       </>
     )}
+    </div>
     <Summary
       isOpen={isModalOpen}
       closeModal={() => setIsModalOpen(false)}
@@ -204,6 +204,6 @@ export default function Layout({
       handleLanguageChange={handleLanguageChange}
       selectedFeatures={selectedFeatures}
     />
-  </div>
+  </section>
 );
 }

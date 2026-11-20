@@ -26,7 +26,7 @@ const Summarize = forwardRef<HTMLDivElement>(() => {
     setError("");
 
     if (!user?.email) {
-      setError("Please sign in to generate a summary.");
+      setError("Sign in to summarize.");
       return;
     }
 

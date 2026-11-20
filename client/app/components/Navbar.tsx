@@ -22,7 +22,7 @@ export default function Navbar({ name }: NavProps) {
             <div className="flex gap-3 md:gap-4 items-center shrink-0">
                 <div className="text-white text-sm md:text-base px-4 md:px-5 py-2 md:py-2.5 rounded-full bg-gray-700/50 hover:bg-gray-600/50 whitespace-nowrap">
                     <span className="inline-block w-4 h-4 bg-contain bg-no-repeat mr-2 align-middle" style={{ backgroundImage: 'url("/Token.png")' }} />
-                    {user ? user.token : "—"}
+                    {user?.token ?? 0}
                     {user?.role && (
                       <span className="ml-2 text-[10px] md:text-xs uppercase tracking-wide text-white/60">
                         {user.role}

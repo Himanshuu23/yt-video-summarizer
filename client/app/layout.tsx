@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-black">
+      <body className="overflow-x-hidden bg-black">
         <Providers>
           <Toaster />
           <Navbar name={NAME} />

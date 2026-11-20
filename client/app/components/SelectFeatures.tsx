@@ -42,11 +42,8 @@ const SelectFeatures = ({ token, setSelectedFeatures }: { token: number, setSele
   return (
     <div style={{ transform: 'translateX(-2%)' }} className="flex flex-col mt-8 px-4 text-white">
       <div className="text-lg font-bold mb-2">What All To Include?</div>
-      {!user && (
-        <Error message="Sign in to spend tokens on extra features. Summary still needs an account." />
-      )}
       {user && !canSelect && (
-        <Error message="You don't have enough tokens to select any extra feature." />
+        <Error message="Not enough tokens for extra features." />
       )}
       {user && hasAnyLockedOption && (
         <Link
