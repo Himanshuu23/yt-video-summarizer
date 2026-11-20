@@ -8,7 +8,7 @@ const userRouter = require('./routes/user.js')
 
 const app = express()
 
-const PORT = 9000
+const PORT = process.env.PORT || 9000
 
 // Set TRUST_PROXY=1 when running behind nginx / a load balancer so rate limits see the real client IP.
 if (process.env.TRUST_PROXY) {

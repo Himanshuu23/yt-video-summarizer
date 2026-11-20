@@ -32,9 +32,12 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 
 const protoDescriptor = grpc.loadPackageDefinition(packageDefinition);
 const summarize = protoDescriptor.summarize;
+const creds = GRPC_SERVER.endsWith(':443')
+    ? grpc.credentials.createSsl()
+    : grpc.credentials.createInsecure();
 
 function getClient() {
-    return new summarize.Summarize(GRPC_SERVER, grpc.credentials.createInsecure());
+    return new summarize.Summarize(GRPC_SERVER, creds);
 }
 
 async function summarizeUrl(videoUrl, features, role) {
